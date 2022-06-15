@@ -1,0 +1,79 @@
+@import "dd.css";
+#cei{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content: flex-start;
+    /* padding:3px 6px; */
+    background-color:#ececec;
+}
+
+
+@media screen and (max-width:414px){
+    #cei{
+        justify-content: center;
+    }
+    .ei{
+        margin:6px 8px;
+        width:100vh;
+    }
+}
+
+@media screen and (min-width:414px) and (max-width:677px){
+    #cei{
+        flex-flow:row wrap;
+        justify-content: center;
+    }
+    
+}
+
+.ei{
+    display: flex;
+    flex-flow: row nowrap;
+    width: 330px;
+    height: 190px;
+    margin:4px;
+    border:solid 4px white;
+    border-radius: 4px;
+}
+
+.eig{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    background-color: rgb(123, 167, 23);
+}
+.eid{
+    width: 60%;
+    background-color: rgb(63, 25, 124);
+}
+.eii{
+    width: 85%;
+    height: 65%;
+    border-radius: 50%;
+    border:solid 4px #ffffff33;
+}
+.eigf{
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff33;
+    padding:0 6px;
+    border-radius: 10px;
+}
+
+.eigf div:first-child{
+    padding-right: 8px;
+}
+.eigf div:nth-child(2){
+    padding-right: 4px;
+}
+
+svg {
+    width:16px;
+    height:16px;
+    margin-left: 8px;
+    margin-right: 2px;
+    color:#222;
+    vertical-align: middle;
+}

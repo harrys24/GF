@@ -1,0 +1,7 @@
+.table-custom tr{
+    cursor: pointer;
+}
+
+tbody .bg-annul{
+    background-color: #ca5b5b !important;
+}

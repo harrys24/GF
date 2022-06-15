@@ -1,0 +1,6 @@
+#tbody tr{
+    cursor: pointer;
+}
+#tbody th,#tbody td,#modal-tbody th,#modal-tbody td{
+    vertical-align: middle;
+}

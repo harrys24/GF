@@ -1,0 +1,50 @@
+.\dart-sass\sass .\dart-sass\scss\styles.scss .\css\styles.css --watch
+
+.\dart-sass\sass .\dart-sass\scss\styles.scss .\css\styles.css --styles=compressed --no-source-map
+
+
+--HERITAGE
+%dd{
+    color:red;
+}
+.btn{
+    color:black;
+}
+
+--call
+@extend %dd;
+@extend .btn;
+
+NB: pas d'inclusion dans class ou id =>création du autre class ou id
+------------------------------------
+
+--MIXIN
+mixin : 
+eg: 
+@mixin rotate($angle:10deg){
+    -ms-transform: rotate($angle);
+    -o-transform: rotate($angle);
+    -moz-transform: rotate($angle);
+    -webkit-transform: rotate($angle);
+    transform: rotate($angle);
+}
+
+@mixin triangle($taille:10px,$colour:white){
+    &::after{
+        content:'';
+        width:0;
+        height:0;
+        border-top:$taille solid $couleur;
+        border-left:$taille solid transparent;
+        border-right:$taille solid transparent;
+        position: -1 * $taille;
+        left:calc(50% - #{$taille});
+    }
+}
+
+---call 
+@include rotate;
+@include rotate(30deg);
+NB: inclusion dans class ou id
+
+

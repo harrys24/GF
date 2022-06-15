@@ -1,0 +1,45 @@
+
+body {
+    margin-top:40px;
+    background-color: #f5f5f5;
+    /* font-family: "century gothic"; */
+    
+}
+
+
+.custom-file label::after{
+    background-color: rgb(13, 159, 226);
+    color:white;
+}
+
+#iphoto{
+    width:125px;
+    height: 150px;
+    border-radius: 4px;
+    border:1px solid rgb(13, 159, 226);
+}
+
+@media screen and (max-width:414px){
+    #iphoto{
+        width:125px;
+        height: 125px;
+        margin:auto ;
+        border-radius: 80px;
+        box-shadow: 0px 2px 20px rgb(255, 255, 255);
+        border:none;
+    }
+}
+@media screen and (min-width:769px) and (max-width:991px){
+    #iphoto{
+        margin-left: 20px;
+        border:none;
+    }
+    
+}
+
+button svg, span svg{
+    width:1.4rem;
+    height:1.4rem;
+    color:rgb(81, 144, 196);
+}
+
