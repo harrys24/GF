@@ -111,7 +111,7 @@ class EtudiantModel extends Model{
         inner join etudiant e on i.etudiant_nie=e.nie
         inner join niv n on i.NIV_id=n.idNIV 
         inner join gp g on i.GP_id=g.idGP 
-        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and e.abandon=? order by e.nie asc";
+        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and i.abandon=? order by e.nie asc";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($au),intval($niv),intval($gp),$abd]);
         return $stmt->fetchAll();
@@ -123,7 +123,7 @@ class EtudiantModel extends Model{
         $sql="SELECT i.num_matr,i.pwd,e.nie,e.nom,e.prenom,e.sexe 
         from inscription i
         inner join etudiant e on i.etudiant_nie=e.nie
-        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and e.abandon=0 order by e.nom,e.prenom asc";
+        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and i.abandon=0 order by e.nom,e.prenom asc";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($au),intval($niv),intval($gp)]);
         return $stmt->fetchAll();
@@ -172,7 +172,7 @@ class EtudiantModel extends Model{
         $sql="select i.num_matr,e.nie,e.photo,e.nom,e.prenom,IF(e.sexe=1,'M','F') as sexe 
         from inscription i 
         inner join etudiant e on i.etudiant_nie=e.nie 
-        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and e.abandon=0 order by e.nom,e.prenom asc";
+        where i.AU_id= ? and i.NIV_id=? and i.GP_id=? and i.abandon=0 order by e.nom,e.prenom asc";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($au),intval($niv),intval($gp)]);
         return $stmt->fetchAll();
@@ -209,7 +209,7 @@ class EtudiantModel extends Model{
         inner join etudiant e on i.etudiant_nie=e.nie
         inner join niv n on i.NIV_id=n.idNIV 
         inner join gp g on i.GP_id=g.idGP 
-        where i.AU_id= :au and e.abandon=:abd and (".$cond.$adv.") 
+        where i.AU_id= :au and i.abandon=:abd and (".$cond.$adv.") 
         order by e.nie asc";
         $au=intval($au);
         $stmt=$db->prepare($sql);
@@ -290,7 +290,7 @@ class EtudiantModel extends Model{
         $sql="SELECT e.nie,e.nom,e.prenom,IF(e.sexe=1,'H','F') AS sexe".$s.
         " FROM inscription i 
         INNER JOIN etudiant e on i.etudiant_nie=e.nie 
-        WHERE i.AU_id= ? AND i.NIV_id=? AND i.GP_id=? AND e.abandon=? ORDER BY e.nom,e.prenom ASC";
+        WHERE i.AU_id= ? AND i.NIV_id=? AND i.GP_id=? AND i.abandon=? ORDER BY e.nom,e.prenom ASC";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($au),intval($niv),intval($gp),$abd]);
         $res= $stmt->fetchAll();
@@ -347,7 +347,7 @@ class EtudiantModel extends Model{
         INNER JOIN etudiant e on i.etudiant_nie=e.nie 
         INNER JOIN niv n on i.niv_id=n.idniv 
         INNER JOIN gp p on i.gp_id=p.idgp 
-        WHERE i.AU_id= ?".$cniv." AND e.abandon=? ORDER BY n.nom_niv,p.nom_gp,e.nom,e.prenom ASC";
+        WHERE i.AU_id= ?".$cniv." AND i.abandon=? ORDER BY n.nom_niv,p.nom_gp,e.nom,e.prenom ASC";
         $stmt=$db->prepare($sql);
         $params=($niv!=-1)?[intval($au),intval($niv),$abd]:[intval($au),$abd];
         $stmt->execute($params);

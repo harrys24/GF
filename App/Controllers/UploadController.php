@@ -31,6 +31,7 @@ class UploadController extends Controller{
     IPPTS=['etudiant_nie','au_id','niv_id','gp_id','do_id','do_en','ep','list_dossier','di','reste_di','dateinscr','tranchefs_id'];
 
     var $ls_au,$ls_niv,$ls_gp,$ls_nat,$ls_ab,$ls_mb,$ls_sb,$ls_do,$ls_trfs,$ls_rec,$ls_dos;
+    var $ls_abd=['OUI'=>1,'NON'=>0];
     var $ordre_dossier=['FI','LE','LM','Q4P','BN','CIN','NS','NP','NT','NB'];
     public function __construct(){
         parent::__construct();
@@ -46,6 +47,16 @@ class UploadController extends Controller{
         $this->render('index');
         $this->renderF();
     }
+    public function abandon(){
+        $header['title']="Upload ABD";
+        $header['current_menu']='AUTRES';
+        $header['js']=['/src/cplugs','/upls/abd','/src/toastr.min'];
+        $header['css']=['/src/inc','/src/toastr'];
+        $this->renderH($header);
+        $this->template('confirm_modal');
+        $this->render('abandon');
+        $this->renderF();
+    }
 
     public function check(){
         Utils::HeaderJs();
@@ -53,6 +64,68 @@ class UploadController extends Controller{
         //file_data
         $this->importAction('file_data');
 
+    }
+
+    public function abd_check(){
+        // Utils::HeaderJs();
+        $name='file_data';
+        $filename=$_FILES[$name]['name'];
+        $error=$_FILES[$name]['error'];
+        if (!empty($filename && $error==0)) {
+            $fileType=pathinfo($filename,PATHINFO_EXTENSION);
+            $fileType=strtolower($fileType);
+            if(!in_array($fileType,self::EXTS)){
+                echo 'Fichier non valide !';
+            }else{
+                $db=Database::getConnection();
+                $sql='UPDATE inscription AS i INNER JOIN etudiant e ON e.nie=i.ETUDIANT_nie INNER JOIN au a ON a.idAU=i.AU_id
+                INNER JOIN niv n ON n.idNIV=i.NIV_id INNER JOIN gp g ON g.idGP=i.GP_id
+                SET i.abandon=:abd WHERE a.nom_au=:au AND n.nom_niv=:niv AND g.nom_gp=:gp AND e.nie=:nie';
+                $db->beginTransaction();
+                $stmt=$db->prepare($sql);
+                $fichier=fopen($_FILES[$name]['tmp_name'],'r');
+                fgetcsv($fichier,0,';');
+                $nbok=0;
+                $nbl=0;
+                try {
+                    while ($data=fgetcsv($fichier,0,';')) {
+                        $nbl++;
+                        $stmt->bindValue(':abd',$this->ls_abd[$data[4]]);
+                        $stmt->bindValue(':au',$data[0]);
+                        $stmt->bindValue(':niv',$data[1]);
+                        $stmt->bindValue(':gp',$data[2]);
+                        $stmt->bindValue(':nie',$data[3]);
+                        $stmt->execute();
+                        if ($stmt->execute()) {
+                            $nbok++;
+                        }
+                    }
+                    if ($nbl==$nbok) {
+                        $db->commit();
+                        echo 'ok';
+                    } else {
+                        $db->rollBack();
+                        echo 'ko';
+                    }
+                    
+                } catch (Exception $ex) {
+                    $db->rollBack();
+                    echo 'ko';
+                }
+            }
+
+        }else{
+            echo 'pas de fichier';
+        }
+    }
+   
+    private function getUtils(){
+        $au=AuModel::getList();//idau,nom_au
+        $niv=NivModel::getList();//idniv,nom_niv
+        $gp=GpModel::getList();//idgp,nom_gp
+        $this->ls_au=$this->setKey($au,'idAU','nom_au');
+        $this->ls_niv=$this->setKey($niv,'idNIV','nom_niv');
+        $this->ls_gp=$this->setKey($gp,'idGP','nom_gp');
     }
 
     private function getAllData(){
@@ -80,6 +153,8 @@ class UploadController extends Controller{
         $this->ls_rec=$this->setKey($rec,'idREC','poste_rec');
         
     }
+   
+
     private function setKey($list,$key,$value){
         //idau,nom_au
         $ls=[];
@@ -91,8 +166,8 @@ class UploadController extends Controller{
 
     }
     public function a(){
-        $this->getAllData();
-        var_dump($this->ls_trfs[10]);
+        $this->getUtils();
+        var_dump($this->ls_au['2020-2021']);
 
     }
     private function getSQL($table,$ppts){
@@ -104,6 +179,7 @@ class UploadController extends Controller{
         return 'insert into '.$table.' ('.$a1.') values ('.$s1.');';
 
     }
+
     private function importAction($name){
         $filename=$_FILES[$name]['name'];
         $error=$_FILES[$name]['error'];
@@ -213,6 +289,7 @@ class UploadController extends Controller{
             return 'Pas de fichier !';
         } 
     }
+
     private function addNotif($lsNotif,$data,$nbError=null){
         if ($nbError==null) {
             $lsNotif[]=$data[1].' '.$data[2].' '.$data[3].' : ok '."<br>";

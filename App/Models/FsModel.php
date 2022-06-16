@@ -38,7 +38,7 @@ class FsModel extends Model{
         INNER JOIN etudiant e ON i.ETUDIANT_nie=e.nie 
         INNER JOIN niv n ON i.NIV_id=n.idNIV 
         INNER JOIN gp g ON i.GP_id=g.idGP 
-        WHERE e.abandon=0 AND f.date_prevu=? ORDER BY n.idNIV ASC, g.idGP ASC;";
+        WHERE i.abandon=0 AND f.date_prevu=? ORDER BY n.idNIV ASC, g.idGP ASC;";
         $stmt=$db->prepare($sql);
         $stmt->execute([$date]);
         return $stmt->fetchAll();

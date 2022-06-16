@@ -42,7 +42,7 @@ class InscriptionModel extends Model{
     public static function getCheckEtudiant($num_matr)
     {
         $db=Database::getConnection();
-        $sql="select a.idAU,a.nom_au as AU,n.idNIV,g.idGP,CONCAT(n.nom_niv,g.nom_gp) as NIV_GP,t.*,e.nie,e.abandon,e.nom,e.prenom,if(e.sexe=1,'M','F') as sexe,datenaiss from inscription i 
+        $sql="SELECT a.idAU,a.nom_au as AU,n.idNIV,g.idGP,CONCAT(n.nom_niv,g.nom_gp) as NIV_GP,t.*,e.nie,i.abandon,e.nom,e.prenom,if(e.sexe=1,'M','F') as sexe,datenaiss from inscription i 
         inner join etudiant e on i.etudiant_nie=e.nie 
         inner join au a on i.AU_id=a.idAU 
         inner join niv n on i.NIV_id=n.idNIV 
