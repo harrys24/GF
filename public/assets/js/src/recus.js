@@ -18,10 +18,17 @@ $(function(){
             $(this).html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             <span class="sr-only">Loading...</span>`);
             $.post('/finance/findByNie', {txt:txt}, function(res){
-                var recu = res, tr = '';
+                var recu = res.recu, tr = '';
                 for(i in recu){
                     var cls = recu[i].annul_recu == 1 ? 'bg-annul text-light' : '';
-                    tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td>'+($.date(new Date(recu[i].date_heure)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a href="./print/'+recu[i].idR+'" target="_blank" class="btn btn-outline-admin btn-light mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    var c = recu[i].annul_recu == 1 ? 'btn-secondary' : 'btn-outline-admin btn-light';
+                    var onclick = recu[i].annul_recu == 1 ? 'return false;' : '';
+                    var style = recu[i].annul_recu == 1 ? 'pointer-events: none;cursor: default;' : '';
+                    if(res.type == "devmaster"){
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><button class="btn btn-outline-danger btn-light" id="delete" data-idr="'+recu[i].idR+'"><i class="bi bi-trash"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }else{
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }
                 }
                 $('#tbody').html(tr);
                 $('#btnRecherche').html('<i class="bi bi-search"></i>');
@@ -30,6 +37,35 @@ $(function(){
 
         }
     })
+    $(document).on("keypress", "#recherche", function(e){
+        if(e.which == 13){
+            var txt = $('#recherche').val();
+            if(txt.length != 10){
+                toastr.error('Veuillez vérifier le NIE !');
+            }else{
+                $(this).html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="sr-only">Loading...</span>`);
+                $.post('/finance/findByNie', {txt:txt}, function(res){
+                    var recu = res.recu, tr = '';
+                    for(i in recu){
+                        var cls = recu[i].annul_recu == 1 ? 'bg-annul text-light' : '';
+                        var c = recu[i].annul_recu == 1 ? 'btn-secondary' : 'btn-outline-admin btn-light';
+                        var onclick = recu[i].annul_recu == 1 ? 'return false;' : '';
+                        var style = recu[i].annul_recu == 1 ? 'pointer-events: none;cursor: default;' : '';
+                        if(res.type == "devmaster"){
+                            tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><button class="btn btn-outline-danger btn-light" id="delete" data-idr="'+recu[i].idR+'"><i class="bi bi-trash"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                        }else{
+                            tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                        }
+                    }
+                    $('#tbody').html(tr);
+                    $('#btnRecherche').html('<i class="bi bi-search"></i>');
+                    toastr.info('Informations bien chargé !')
+                }, 'JSON');
+
+            }
+        }
+      });
 
     function initModal(){
         $('#nie').val('');
@@ -112,27 +148,54 @@ $(function(){
     $('#filtre').on('change', function(){
         var filtre = $(this).val();
         $("#recherche").val('');
-        $.post('/finance/filtreRecu', {filtre:filtre}, function(res){
-            var recu = res.recu, tr = '';
-            for(i in recu){
-                var cls = recu[i].annul_recu == 1 ? 'bg-annul text-light' : '';
-                var c = recu[i].annul_recu == 1 ? 'btn-secondary' : 'btn-outline-admin btn-light';
-                var onclick = recu[i].annul_recu == 1 ? 'return false;' : '';
-                var style = recu[i].annul_recu == 1 ? 'pointer-events: none;cursor: default;' : '';
-                if(res.type == "devmaster"){
-                    tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><button class="btn btn-outline-danger btn-light" id="delete" data-idr="'+recu[i].idR+'"><i class="bi bi-trash"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
-                }else{
-                    tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+        if(filtre == 'date'){
+            $('#divDate').removeClass('d-none');
+        }else{
+            $('#divDate').addClass('d-none');
+            $.post('/finance/filtreRecu', {filtre:filtre}, function(res){
+                var recu = res.recu, tr = '';
+                for(i in recu){
+                    var cls = recu[i].annul_recu == 1 ? 'bg-annul text-light' : '';
+                    var c = recu[i].annul_recu == 1 ? 'btn-secondary' : 'btn-outline-admin btn-light';
+                    var onclick = recu[i].annul_recu == 1 ? 'return false;' : '';
+                    var style = recu[i].annul_recu == 1 ? 'pointer-events: none;cursor: default;' : '';
+                    if(res.type == "devmaster"){
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><button class="btn btn-outline-danger btn-light" id="delete" data-idr="'+recu[i].idR+'"><i class="bi bi-trash"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }else{
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }
                 }
-            }
-            if(filtre == 'now'){
+                if(filtre == 'now'){
+                    $('#totalNow').html(format(res.total[0].montant));
+                }else{
+                    $('#totalNow').html("??");
+                }
+                toastr.info('informations bien chargés !')
+                $('#tbody').html(tr);
+            },'JSON')
+        }
+        
+    })
+
+    $('#filtreDate').on('change', function(){
+        var date = $(this).val();
+        $.post('/finance/getRecuByDate', {date : date}, function(res){
+            var recu = res.recu, tr = '';
+                for(i in recu){
+                    var cls = recu[i].annul_recu == 1 ? 'bg-annul text-light' : '';
+                    var c = recu[i].annul_recu == 1 ? 'btn-secondary' : 'btn-outline-admin btn-light';
+                    var onclick = recu[i].annul_recu == 1 ? 'return false;' : '';
+                    var style = recu[i].annul_recu == 1 ? 'pointer-events: none;cursor: default;' : '';
+                    if(res.type == "devmaster"){
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><button class="btn btn-outline-danger btn-light" id="delete" data-idr="'+recu[i].idR+'"><i class="bi bi-trash"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }else{
+                        tr += '<tr class="'+cls+'"><td>'+(parseInt(i)+1)+'</td><td>'+recu[i].NIE+'</td><td>'+recu[i].nom+'</td><td>'+recu[i].prenom+'</td><td>'+(recu[i].nom_niv+""+recu[i].nom_gp)+'</td><td class="text-center">'+($.date(new Date(recu[i].date_p)))+'</td><td>'+format(parseFloat(recu[i].montant).toFixed(2))+' Ar</td><td>'+format(parseFloat(recu[i].reste).toFixed(2))+' Ar</td><td>'+recu[i].mode+'</td><td class="d-flex justify-content-around flex-lg-row flex-column"><button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr='+recu[i].idR+'><i class="bi bi-pen"></i></button><a onclick="'+onclick+'" style="'+style+'" href="./print/'+recu[i].idR+'" target="_blank" class="btn '+c+' mt-lg-0 mt-1"><i class="bi bi-printer"></i></a></td></tr>';
+                    }
+                }
                 $('#totalNow').html(format(res.total[0].montant));
-            }else{
-                $('#totalNow').html("??");
-            }
-            toastr.info('informations bien chargés !')
-            $('#tbody').html(tr);
-        },'JSON')
+                toastr.info('informations bien chargés !')
+                $('#tbody').html(tr);
+        }, 'JSON')
     })
 
     $("#tbody").on('dblclick','#delete', function(){
