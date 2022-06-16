@@ -25,7 +25,7 @@ class FinanceController extends Controller
 
     public function recus(){
         $header['title']='Reçus';
-        $header['current_menu']='FINANCE';
+        $header['current_menu']='RECU';
         $header['css']=['/src/recus', '/src/toastr'];
         $header['js']=['/src/cplugs','/src/recus','/src/jquery-ui.min', '/src/toastr.min'];
         $this->renderH($header);
