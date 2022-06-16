@@ -59,6 +59,7 @@ class FinanceController extends Controller
     public function getRecuByDate(){
         Utils::HeaderJS();
         $date = $_POST['date'];
+        $data['type'] = $_SESSION['type'];
         $data['recu'] = RecusModel::getRecuByDate($date);
         $data['total'] = RecusModel::getTotlaDay($date);
         echo json_encode($data);
