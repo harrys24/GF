@@ -40,7 +40,7 @@
     <div class="table-md-responsive table-custom">
         <table class="table table-hover table-striped border">
             <thead>
-                <th>#</th>
+                <th>N°</th>
                 <th>NIE</th>
                 <th>Nom</th>
                 <th>Prénom(s)</th>
@@ -49,6 +49,7 @@
                 <th style="width: 150px;">Montant</th>
                 <th style="width: 150px;">R.A.P</th>
                 <th>Mode</th>
+                <th>Type</th>
                 <?php if($_SESSION['type'] == 'devmaster'){ ?>
                 <th class="text-center" style="width: 160px">Action</th>
                 <?php }else{ ?>
@@ -58,7 +59,7 @@
             <tbody id="tbody">
                 <?php foreach($recus as $k => $r){ ?>
                     <tr class="<?= $r['annul_recu'] == 1 ? 'bg-annul text-light' : ''?>">
-                        <td><?= $k + 1 ?></td>
+                        <td><?= $r["idR"] ?></td>
                         <td><?= $r["NIE"] ?></td>
                         <td><?= $r["nom"] ?></td>
                         <td><?= $r["prenom"] ?></td>
@@ -67,6 +68,7 @@
                         <td><?= number_format($r['montant'], 2,",",' ') ?> Ar</td>
                         <td><?= number_format($r['reste'], 2,",",' ') ?> Ar</td>
                         <td><?= $r['mode'] ?></td>
+                        <td><?= $r['designation'] ?></td>
                         <?php if(($r['annul_recu'] != 1 && $_SESSION['type'] != 'devmaster') || $_SESSION['type'] == 'devmaster'){ ?>
                             <td class="d-flex justify-content-around flex-lg-row flex-column">
                                 <button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr="<?= $r["idR"] ?>"><i class="bi bi-pen"></i></button>

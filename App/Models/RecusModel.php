@@ -7,7 +7,7 @@ class RecusModel extends Model{
     public static function getCurrentRecus(){
         $db=Database::getConnection();
         try {
-            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, annul_recu, date_p, mode,reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id ORDER BY date_heure DESC Limit 50";
+            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, designation, annul_recu, date_p, mode,reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id ORDER BY date_heure DESC Limit 50";
             $stm = $db->prepare($sql);
             $stm->execute();
             return $stm->fetchAll();
@@ -55,7 +55,7 @@ class RecusModel extends Model{
     public static function getRecuByDate($date){
         $db=Database::getConnection();
         try {
-            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, annul_recu, date_p, mode, reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND date_p=? ORDER BY date_heure DESC";
+            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, designation, montant, annul_recu, date_p, mode, reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND date_p=? ORDER BY date_heure DESC";
             $stm = $db->prepare($sql);
             $stm->bindParam(1, $date);
             $stm->execute();
@@ -91,7 +91,7 @@ class RecusModel extends Model{
     public static function getRecusByNie($nie){
         $db=Database::getConnection();
         try {
-            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, annul_recu, date_p, reste, mode FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND recus.NIE =?    ORDER BY date_heure DESC";
+            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, designation, annul_recu, date_p, reste, mode FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND recus.NIE =?    ORDER BY date_heure DESC";
             $stm = $db->prepare($sql);
             $stm->bindParam(1, $nie);
             $stm->execute();
@@ -103,7 +103,7 @@ class RecusModel extends Model{
     public static function getRecuByStatus($status){
         $db=Database::getConnection();
         try {
-            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, annul_recu, date_p, mode,reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND annul_recu=? ORDER BY date_heure DESC";
+            $sql = "SELECT idR, recus.NIE, nom, prenom, nom_niv, nom_gp, date_heure, montant, designation, annul_recu, date_p, mode,reste FROM recus, etudiant, inscription, niv, gp WHERE recus.NIE=etudiant.nie AND recus.AU_id=inscription.AU_id AND recus.NIV_id=inscription.NIV_id AND recus.GP_id=inscription.GP_id AND recus.INSC_num_matr=inscription.num_matr AND etudiant.nie=inscription.ETUDIANT_nie AND recus.NIE=inscription.ETUDIANT_nie AND niv.idNIV = recus.NIV_id AND gp.idGP=recus.GP_id AND annul_recu=? ORDER BY date_heure DESC";
             $stm = $db->prepare($sql);
             $stm->bindParam(1, $status);
             $stm->execute();
