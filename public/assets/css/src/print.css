@@ -1,0 +1,12 @@
+@font-face {
+    font-family: karla;
+    src: url(../../fonts/Karla/Karla-Regular.ttf);
+}
+#print{
+    font-family: karla;
+    font-size:0.9rem !important;
+    color: black !important;
+}
+#img img{
+    position: absolute !important;
+}
