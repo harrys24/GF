@@ -8,15 +8,11 @@ class Model{
         $this->table=self::get_tablename();
     }
     
-
     public function getPPTS(){
         $ppts=get_object_vars($this);
         unset($ppts['db'],$ppts['table']);
         return $ppts;
     }
-
-    
-
 
 
     public static function get_vars(){
@@ -26,9 +22,15 @@ class Model{
     }
 
     private static function get_tablename(){
-        $mn=strtolower(get_called_class());
-        $tab=explode('\\',$mn);
-        return str_replace('model','',$tab[2]);
+        $ppts=get_class_vars(get_called_class());
+        if (isset($ppts['table_name'])) {
+            return strtolower($ppts['table_name']);
+        } else {
+            $mn=strtolower(get_called_class());
+            $tab=explode('\\',$mn);
+            return str_replace('model','',$tab[2]);
+        }
+        
 
     }
 

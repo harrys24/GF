@@ -17,12 +17,22 @@ class SyntheseController extends Controller
     {
         $header['title']='SYNTHESE';
         $header['current_menu']='SYNTHESE';
-        $header['css']=['/src/synthese', '/src/toastr'];
-        $header['js']=['/src/toastr.min', '/src/synthese'];
+        $header['css']=['/src/synthese','/select2.min','/src/toastr'];
+        $header['js']=['/src/toastr.min','/select2.min','/src/synthese'];
         $this->renderH($header);
         $this->render('index', [
             'data' => SyntheseModel::getTotalPercu()
         ]);
+        $this->renderF();
+    }
+    public function main()
+    {
+        $header['title']='Template';
+        $header['current_menu']='Template';
+        $header['css']=['/src/synthese','/select2.min','/src/toastr'];
+        $header['js']=['/src/toastr.min','/select2.min','/src/synthese'];
+        $this->renderH($header);
+        $this->render('main');
         $this->renderF();
     }
     public function student()

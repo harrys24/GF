@@ -47,8 +47,8 @@ $(function(){
         nbT=$(this).data('nb');
         nr=$(this).data('nr');
         row=$(this).data('row');
-        status=$(this).data('status');
-        console.log('o > status:'+status+' row:'+row+' nt: '+nt);
+        state=$(this).data('status');
+        console.log('o > status:'+state+' row:'+row+' nt: '+nt);
         $('#item-title').html('En cours ...');
         $('#item-modal').modal('show');
         niv='<span class="text-blue"> ('+$(this).find(':nth-child(2)').html()+')</span>';
@@ -100,7 +100,7 @@ $(function(){
             $('#item-reste').html(format(reste));
             $('#item-title').html(v);
             $('#modal-tbody').html(html);
-            $('#item-echeance').data({row:row,status:status,cstatus:status,index:i,nm:nm,fs:fs,nt:nt}).html(echeance+' nm: '+nm+' fs: '+fs+' index:'+i);
+            $('#item-echeance').data({row:row,status:state,cstatus:state,index:i,nm:nm,fs:fs,nt:nt}).html(echeance+' nm: '+nm+' fs: '+fs+' index:'+i);
         },'json')
         
     })

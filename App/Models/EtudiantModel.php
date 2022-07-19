@@ -60,14 +60,24 @@ class EtudiantModel extends Model{
             return false;
         }
         try {
+            $sql="DELETE FROM absence WHERE insc_num_matr=:nm;
+            DELETE FROM retard WHERE insc_num_matr=:nm;
+            DELETE FROM moyenne WHERE insc_num_matr=:nm;
+            DELETE FROM moyenneue WHERE insc_num_matr=:nm;
+            DELETE FROM note WHERE insc_num_matr=:nm;
+            DELETE FROM fs WHERE inscr_num_matr=:nm;
+            DELETE FROM inscription WHERE num_matr=:nm;
+            ";
             if ($nb==1) {
-                $sql="delete from fs where inscr_num_matr=?;delete from inscription where num_matr=?;delete from etudiant where nie=?;";
+                $sql.="DELETE FROM etudiant WHERE nie=:nie;";
                 $stmt=$db->prepare($sql);
-                return $stmt->execute([$num_matr,$num_matr,$nie]);
+                $stmt->bindParam('nm',$num_matr);
+                $stmt->bindParam('nie',$nie);
+                return $stmt->execute();
             }else{
-                $sql="delete from fs where inscr_num_matr=?;delete from inscription where num_matr=?;";
                 $stmt=$db->prepare($sql);
-                return $stmt->execute([$num_matr,$num_matr]);
+                $stmt->bindParam('nm',$num_matr);
+                return $stmt->execute();
     
             }
         } catch (\PDOException $ex) {

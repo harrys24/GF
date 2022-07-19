@@ -12,13 +12,13 @@ class Controller{
 
     public function render($filename, $data = null){
         if($data){extract($data);}
-        $v=str_replace('.','/',$filename);
-        $ls=explode('/',$v);
-        if (count($ls)>1) {
-            $nv=ucfirst($ls[0]).'View/';
-            unset($ls[0]);
-            $nf=implode('/',$ls);
-            require APP.'/Views/'.$nv.$nf.'.php';
+        $_tmp=str_replace('.','/',$filename);
+        $_tmp=explode('/',$_tmp);
+        if (count($_tmp)>1) {
+            $_nv=ucfirst($_tmp[0]).'View/';
+            unset($_tmp[0]);
+            $_nf=implode('/',$_tmp);
+            require APP.'/Views/'.$_nv.$_nf.'.php';
         } else {
             require $this->dir_view.$filename.'.php';
         }
