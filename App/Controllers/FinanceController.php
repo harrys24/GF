@@ -56,6 +56,14 @@ class FinanceController extends Controller
         echo json_encode($data);
     }
 
+    public function getRecuByDate(){
+        Utils::HeaderJS();
+        $date = $_POST['date'];
+        $data['type'] = $_SESSION['type'];
+        $data['recu'] = RecusModel::getRecuByDate($date);
+        $data['total'] = RecusModel::getTotlaDay($date);
+        echo json_encode($data);
+    }
 
     public function CheckDate()
     {
@@ -147,7 +155,8 @@ class FinanceController extends Controller
     public function findByNie(){
         Utils::HeaderJS();
         $txt = $_POST['txt'];
-        $data = RecusModel::getRecusByNie($txt);
+        $data['type'] = $_SESSION['type'];
+        $data['recu'] = RecusModel::getRecusByNie($txt);
         echo json_encode($data);
     }
 

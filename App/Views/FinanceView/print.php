@@ -16,19 +16,19 @@
     ?>
     <div id="print" style="width: 80mm; height: auto; font-size: 12px; padding: 15px;">
         <div class="d-flex justify-content-between" style="line-height: 6px !important; text-align: right;">
-            <div class="bd-highlight">
-                <img src="/assets/images/logo-esmia.png" alt="" style="width: 93px;">
+            <div class="bd-highlight" id="img">
+                <!-- <img src="/assets/images/logo-esmia.png" alt="" style="width: 78px;"> -->
             </div>
             <div class="d-flex flex-column mt-2" style="margin-left: 10px; line-height: 0px !important;"> 
                 <p><b>ESMIA - Service Financier</b></p>
                 <p><b>NIF:</b> 30018212367</p>
-                <p><b>STAT:</b> 85302 11 2014 0 10990</p>
+                <p ><b>STAT:</b> 85302 11 2014 0 10990</p>
                 <p>034 50 660 54</p>
                 <p>contact@esmia-mada.com</p>
             </div>
         </div>
-        <h5 class="text-center">REÇU DE PAIEMENT N°<?= $recus[0]['idR'] ?></h5>
-        <div class="container mt-3" style="line-height: 6px;">
+        <h6 class="text-center mt-1">REÇU DE PAIEMENT N°<?= $recus[0]['idR'] ?></h6>
+        <div class="container mt-4" style="line-height: 6px;">
             <div class="row">
                 <p class="col-4"><b>Nom:</b></p>
                 <p class="col-8" style="line-height: 13px;"><?= $recus[0]['nom'] ?></p>
@@ -46,7 +46,7 @@
                 <p class="col-8"><?= $recus[0]['nom_niv'].''.$recus[0]['nom_gp'] ?></p>
             </div>
             <div class="row" style="line-height: 10px;">
-                <p class="col-4"><b>Désignation:</b></p>
+                <p class="col-4" ><b>Désignation:</b></p>
                 <p class="col-8"><?= $recus[0]['designation'] ?></p>
             </div>
             <div class="row" style="line-height: 13px;">
@@ -69,7 +69,7 @@
                 
             </div>
             <div class="row" style="line-height: 13px;">
-                <p class="col-4"><b>Mode de paiement :</b></p>
+                <p class="col-4" ><b>Mode de paiement:</b></p>
                 <p class="col-8 mt-2"><?= $recus[0]['mode'] ?></p>
             </div>
             <?php if($recus[0]['mode'] == "MVOLA"){?>
@@ -94,7 +94,7 @@
         <div class="d-flex justify-content-between mr-2 mt-2">
             <p>Reçu par <b><?= $recus[0]['signataire'] ?></b> le <?php echo((new DateTime($recus[0]['date_heure']))->format("d-m-Y"))?> à <?php echo((new DateTime($recus[0]['date_heure']))->format("H:i"))?></p>
         </div>
-        <div class="mt-5" style="border-bottom: 1px solid #000; font-size: 10px;">
+        <div class="mt-5" style="border-bottom: 1px solid #000; font-size: 0.75rem; text-align: justify;">
             L’écriture sur ce reçu s’efface avec le temps. Si vous souhaitez le conserver sur une longue durée, merci d’en faire une copie<b>.</b>
         </div>
     </div>

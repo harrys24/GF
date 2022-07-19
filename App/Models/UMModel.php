@@ -41,7 +41,7 @@ class UMModel extends Model{
         'FICHE D\'INSCRIPTION'=>'/Inscription',
         'LISTE DES ÉTUDIANTS'=>'/Etudiant/Listes',
         'EMARGEMENTS'=>'/Emargements',
-        'RECU' => '/finance/recus',
+        // 'RECU' => '/finance/recus',
         // 'ABSENCE ET RETARD'=>[
         //     'id'=>'menu_abs_rt',
         //     ['name'=>'Gestion des ABS/RT','link'=>'/Retard'],

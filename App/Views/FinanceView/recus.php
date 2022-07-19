@@ -8,7 +8,7 @@
             <div class="input-group col-12 col-lg-3 mt-lg-0 mt-1">
                 <h4 class="text-primary"> TOTAL: <span id="totalNow">??</span> Ar</h4>
             </div>
-            <div class="input-group mr-2 col-12 col-lg-2 mt-lg-0 mt-2 p-0">
+            <div class="input-group mr-1 col-12 col-lg-2 mt-lg-0 mt-2 p-0">
                 <div class="input-group-prepend">
                     <div class="input-group-text">Filtre <span class="text-warning">*</span></div>
                 </div>
@@ -16,9 +16,16 @@
                     <option value="tous">Tous</option>
                     <option value="now">Aujourd'hui</option>
                     <option value="annule">Annulé</option>
+                    <option value="date">Par date</option>
                 </select>
             </div>
-            <div class="input-group col-12 col-lg-3 mt-lg-0 mt-2 p-0">
+            <div class="input-group mr-1 col-12 col-lg-2 mt-lg-0 mt-2 p-0 d-none" id="divDate">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">D <span class="text-warning">*</span></div>
+                </div>
+                <input type="date" name="filtreDate" id="filtreDate" class="form-control">
+            </div>
+            <div class="input-group col-12 col-lg-2 mt-lg-0 mt-2 p-0">
                 <input type="text" name="recherche" id="recherche" class="form-control" placeholder="NIE...">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="button" id="btnRecherche"><i class="bi bi-search"></i></button>
@@ -33,7 +40,7 @@
     <div class="table-md-responsive table-custom">
         <table class="table table-hover table-striped border">
             <thead>
-                <th>#</th>
+                <th>N°</th>
                 <th>NIE</th>
                 <th>Nom</th>
                 <th>Prénom(s)</th>
@@ -42,6 +49,7 @@
                 <th style="width: 150px;">Montant</th>
                 <th style="width: 150px;">R.A.P</th>
                 <th>Mode</th>
+                <th>Type</th>
                 <?php if($_SESSION['type'] == 'devmaster'){ ?>
                 <th class="text-center" style="width: 160px">Action</th>
                 <?php }else{ ?>
@@ -51,7 +59,7 @@
             <tbody id="tbody">
                 <?php foreach($recus as $k => $r){ ?>
                     <tr class="<?= $r['annul_recu'] == 1 ? 'bg-annul text-light' : ''?>">
-                        <td><?= $k + 1 ?></td>
+                        <td><?= $r["idR"] ?></td>
                         <td><?= $r["NIE"] ?></td>
                         <td><?= $r["nom"] ?></td>
                         <td><?= $r["prenom"] ?></td>
@@ -60,6 +68,7 @@
                         <td><?= number_format($r['montant'], 2,",",' ') ?> Ar</td>
                         <td><?= number_format($r['reste'], 2,",",' ') ?> Ar</td>
                         <td><?= $r['mode'] ?></td>
+                        <td><?= $r['designation'] ?></td>
                         <?php if(($r['annul_recu'] != 1 && $_SESSION['type'] != 'devmaster') || $_SESSION['type'] == 'devmaster'){ ?>
                             <td class="d-flex justify-content-around flex-lg-row flex-column">
                                 <button class="btn btn-outline-warning btn-warning btn-light" id="modif" data-idr="<?= $r["idR"] ?>"><i class="bi bi-pen"></i></button>
