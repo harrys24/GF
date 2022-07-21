@@ -59,12 +59,17 @@ class DetailTrancheModel extends Model{
         }
     }
 
-    public static function check($params){
+    public static function getDetail($params){
         $db=Database::getConnection();
         $sql='SELECT * FROM detail_par_tranche WHERE au_id=:au AND niv_id=:niv AND tranche_id=:tranche ORDER BY num_tranche ASC;';
         $stmt=$db->prepare($sql);
         $stmt->execute($params);
-        $data=$stmt->fetchAll();
+        return $stmt->fetchAll();
+    
+    }
+
+    public static function check($params){
+        $data=self::getDetail($params);
         if (count($data)>0) {
             $res['mode']='u';
             $res['list']=$data;

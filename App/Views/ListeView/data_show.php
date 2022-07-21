@@ -62,6 +62,23 @@ function showContact($suffixe='',$required=false){
     <input type="text" name="tel3'.$suffixe.'" class="form-control font-italic">';
 }
 
+//SHOW LIST DATE PREVU
+function showDetail_Tranche($fs){
+    $str='';
+    foreach ($fs as $item) {
+        $str.='<div class="col-12 col-md-6 col-lg-4 form-group">
+        <b>Tranche '.$item['num_tranche'].'</b>
+        <input type="hidden" name="detail['.$item['num_tranche'].'][id]" value="'.$item['id'].'"/>
+        <input type="hidden" value="'.$item['num_tranche'].'"/>
+        <div class="input-group">
+            <input type="date" value="'.$item['date_prevu'].'" class="col-lg-8 form-control" disabled>
+            <input type="text" value="'.$item['montant_prevu'].'" class="col-lg-4 form-control" disabled>
+            <div class="input-group-append bg-light"><div class="input-group-text">AR</div></div>
+        </div></div>';
+    }
+    echo $str;
+    
+}
 
 //SHOW LIST DATE PREVU
 function showDate_prevu($fs){

@@ -24,7 +24,7 @@ $(function(){
     }
     $('#au').on('change',function(){
         var au=$('#au').val();
-        $.post('/tarif_fs/checkView',{'au':au},function(res){
+        $.post('/TarifFs/checkView',{'au':au},function(res){
             var html='';
             console.log('u'+res.mode);
             if (res.mode=='u') {
@@ -50,7 +50,7 @@ $(function(){
         niv=$('#detail-'+index+'-niv').val(),montant=$('#detail-'+index+'-montant').val();
         var loading='<i class="spinner-grow spinner-grow-sm text-light" role="status"></i>';
         $('#btn-'+index+'-check').html(loading);
-        $.post('/tarif_fs/update',{'id':id,'au':au,'niv':niv,'montant':montant},function(res){
+        $.post('/TarifFs/update',{'id':id,'au':au,'niv':niv,'montant':montant},function(res){
             $('#btn-'+index+'-check').html('<i class="bi bi-check"></i>');
         })
     })

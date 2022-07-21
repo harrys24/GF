@@ -9,7 +9,7 @@ use App\Models\TrancheFsModel;
 use App\Models\DetailTrancheModel;
 use App\Models\TarifFsModel;
 
-class Detail_TrancheController extends Controller
+class DetailTrancheController extends Controller
 {
     public function __construct(){
         parent::__construct();
@@ -36,13 +36,15 @@ class Detail_TrancheController extends Controller
         $res= DetailTrancheModel::check($_POST);
         echo json_encode($res);
     }
+
+
     public function checkData(){
         if ($_POST['mode']=='u') {
             $res= DetailTrancheModel::updateList($_POST);
         }elseif ($_POST['mode']=='i') {
             $res= DetailTrancheModel::insertList($_POST);
         }
-        header('Location: /Detail_Tranche');
+        header('Location: /DetailTranche');
         
     }
 

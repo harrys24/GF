@@ -11,6 +11,7 @@ use App\Models\DataModel;
 use App\Models\EtudiantModel;
 use App\Models\TrancheFsModel;
 use App\Models\InscriptionModel;
+use App\Models\DetailTrancheModel;
 
 class ListeController extends Controller
 {
@@ -59,7 +60,7 @@ class ListeController extends Controller
     //get
     public function view($num_matr){
         $db=Database::getConnection();
-        $sql1="SELECT e.*,i.NIV_id,i.dateInscr,i.DI,i.Reste_DI,i.EP,i.do_en,i.comment,i.list_dossier,
+        $sql1="SELECT e.*,i.AU_id,i.NIV_id,t.idT,i.dateInscr,i.DI,i.Reste_DI,i.EP,i.do_en,i.comment,i.list_dossier,
         a.nom_au,n.nom_niv,g.nom_gp,d.diplome,t.nbT,nt.nationalite,r.poste_rec,b.annee,m.mention,s.serie 
         FROM inscription i 
         INNER JOIN etudiant e ON i.ETUDIANT_nie=e.nie 
@@ -77,8 +78,11 @@ class ListeController extends Controller
         $stmt=$db->prepare($sql1);
         $stmt->execute([$num_matr]);
         $res=$stmt->fetch();
-        $res['dossier']=InscriptionModel::getDossier($res['NIV_id']);
-        $res['fs']=FsModel::getListBy($num_matr);
+        $fk_au=$res['AU_id'];
+        $fk_niv=$res['NIV_id'];
+        $fk_tranche=$res['idT'];
+        $res['dossier']=InscriptionModel::getDossier($fk_niv);
+        $res['fs']=DetailTrancheModel::getDetail(['au'=>$fk_au,'niv'=>$fk_niv,'tranche'=>$fk_tranche]);
         $header['title']='Détail '.$res['nie'];
         $header['current_menu']='LISTE DES ÉTUDIANTS';
         $header['css']=['toggle-btn','/src/form'];

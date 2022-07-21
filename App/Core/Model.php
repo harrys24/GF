@@ -46,7 +46,7 @@ class Model{
         $str.="--------------------------------------------\n";
         $nbError=0;
         foreach ($data as $key => $value) {
-            if (array_key_exists($key,$this)) {
+            if (property_exists($this,$key)) {
                 $this->{$key}=$value;
             }else{
                 
@@ -64,7 +64,7 @@ class Model{
     public function parse($data)
     {
         foreach ($data as $key => $value) {
-            if (array_key_exists($key,$this)) {
+            if (property_exists($this,$key)) {
                 $this->{$key}=$value;
             }
         }

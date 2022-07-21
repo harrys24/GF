@@ -51,8 +51,12 @@ class InscriptionController extends Controller
     }
 
 
-    //post Inscription Etudiant
     public function checkEtudiant(){
+        var_dump($_POST);
+    }
+
+    //post Inscription Etudiant
+    public function _checkEtudiant(){
         header('content-type:text/javascript');        
         //NIE
         $nie=$_POST['nie_saison'].$_POST['nie_annee'].$_POST['nie_num'];
@@ -191,16 +195,139 @@ class InscriptionController extends Controller
             $inscr->parse($_POST);
             $ui= $inscr->update();
             HistoriqueModel::insertData('EDITION',$detail,$info);
-            if($ue=='ok' && $ui=='ok'){
-                $db->commit();
-                // echo 'Mise à jour effectuée !';
-                echo json_encode(['color'=>'success','message'=>'Mise à jour effectuée "en mode full insertion" !','status'=>'ok']);
-            }else{
-                $db->rollback();
-                // echo 'Erreur de mise à jour !';
-                echo json_encode(['color'=>'danger','message'=>'Erreur de mise à jour !','status'=>'ko']);
-                die();
+            if (isset($_POST['sd'])) {
+                //MODE MISE A JOUR AVEC DATE PREVU DEJA PREREMPLIS
+                if ($_POST['mode']=='u') {
+                    $ls=FsModel::getListBy($num_matr);
+                    $_nbT=count($ls);
+                    $nbu=0;
+                    if ($_nbT==$nbT) {
+                    // classic
+                        for ($i=1; $i <= $nbT; $i++) { 
+                            $key=$i.'T';
+                            $t=str_replace('/','-',$_POST[$key]);
+                            $date_prevu=date('Y-m-d',strtotime($t));
+                            
+                            $fs=new FsModel();
+                            $pptsFS['idFS']=intval($ls[$i-1]['idFS']);
+                            $pptsFS['num_tranche']=$i;
+                            $pptsFS['date_prevu']=$date_prevu;
+                            $pptsFS['INSCR_num_matr']=$num_matr;
+                            $fs->parse($pptsFS);
+        
+                            $uf= $fs->update(null,['num_reçu','date_payement','montant']);
+                            if($uf=='ok'){ $nbu++; }
+                        }
+                    }elseif ($_nbT<$nbT) {
+                    // update add
+                        for ($i=1; $i <= $nbT; $i++) { 
+                            $key=$i.'T';
+                            $t=str_replace('/','-',$_POST[$key]);
+                            $date_prevu=date('Y-m-d',strtotime($t));
+                            $fs=new FsModel();
+                            $pptsFS['num_tranche']=$i;
+                            $pptsFS['date_prevu']=$date_prevu;
+                            $pptsFS['INSCR_num_matr']=$num_matr;
+                            if($i<=$_nbT){
+                                $pptsFS['idFS']=intval($ls[$i-1]['idFS']);
+                                $fs->parse($pptsFS);
+                                $uf= $fs->update(null,['num_reçu','date_payement','montant']);
+                                if($uf=='ok'){ $nbu++; }
+                            }else{
+                                $fs->parse($pptsFS);
+                                $af= $fs->insert(['num_reçu','date_payement','montant']);
+                                $lastId=intval($af);
+                                if(isset($lastId)){ $nbu++; }
+                            }
+                        }
+                    }else {
+                        # update del $_nbT>$nbT
+                        // 1 2 3 _nbT 
+                        //1 nbT
+                        $nbdf=0;
+                        for ($i=1; $i <= $_nbT; $i++) { 
+                            $fs=new FsModel();
+                            $pptsFS['idFS']=intval($ls[$i-1]['idFS']);
+                            $pptsFS['num_tranche']=$i;
+                            $pptsFS['INSCR_num_matr']=$num_matr;
+                            // var_dump($fs);
+                            if($i<=$nbT){
+                                $key=$i.'T';
+                                $t=str_replace('/','-',$_POST[$key]);
+                                $date_prevu=date('Y-m-d',strtotime($t));
+                                $pptsFS['date_prevu']=$date_prevu;
+                                $fs->parse($pptsFS);
+                                $uf= $fs->update(null,['num_reçu','date_payement','montant']);
+                                if($uf=='ok'){ $nbu++; }
+                            }else{
+                                $fs->parse($pptsFS);
+                                $df= $fs->delete();
+                                if($df=='ok'){ $nbdf++; }
+                            }
+                        }
+                        $nb=$nbu+$nbdf;
+                        $nbu=($nb==$_nbT)?$_nbT-$nbdf:0;
+                        // nbu : 1
+                        // nbdf :2
+                        // nbT: 1
+                        // _nbT: 3 
+                    }
+    
+                    if($ue=='ok' && $ui=='ok' && $nbu==$nbT){
+                        $db->commit();
+                        // echo 'Mise à jour effectuée !';
+                        echo json_encode(['color'=>'success','message'=>'Mise à jour effectuée "en mode full insertion" !','status'=>'ok']);
+                    }else{
+                        $db->rollback();
+                        // echo 'Erreur de mise à jour !';
+                        echo json_encode(['color'=>'danger','message'=>'Erreur de mise à jour !','status'=>'ko']);
+                        die();
+                    }
+                    
+                } else {
+                //MODE MISE A JOUR AVEC DATE PREVU (A AJOUTER SUR DB)
+                    $nbat=0;
+                    for ($i=1; $i <= $nbT; $i++) { 
+                        $key=$i.'T';
+                        $t=str_replace('/','-',$_POST[$key]);
+                        $date_prevu=date('Y-m-d',strtotime($t));
+                        
+                        $fs=new FSModel();
+                        $pptsFS['num_tranche']=$i;
+                        $pptsFS['date_prevu']=$date_prevu;
+                        $pptsFS['INSCR_num_matr']=$num_matr;
+                        $fs->parse($pptsFS);
+                        $cf= $fs->insert(['num_reçu','date_payement','montant']);
+                        $cf=intval($cf);
+                        if(is_int($cf)){ $nbat++; }
+                    }
+
+                    if($ue=='ok' && $ui='ok' && $nbat==$nbT){
+                        $db->commit();
+                        echo json_encode(['color'=>'success','message'=>'Mise à jour "en ajoutant de date de prevu payement" efféctuée !','status'=>'ok']);
+                    }else{
+                        $db->rollback();
+                        echo json_encode(['color'=>'danger','message'=>'Erreur de mise à jour "en ajoutant de date prevu payement" !','status'=>'ko']);
+                        die();
+                    }
+                }
+                
+                
+
+            } else {
+                //MODE MISE A JOUR SANS DATE PREVU DEJA 
+                if($ue=='ok' && $ui=='ok'){
+                    $db->commit();
+                    // echo 'Mise à jour effectuée !';
+                    echo json_encode(['color'=>'success','message'=>'Mise à jour effectuée "en mode sans date de prevu de paiement" !','status'=>'ok']);
+                }else{
+                    $db->rollback();
+                    // echo 'Erreur de mise à jour !';
+                    echo json_encode(['color'=>'danger','message'=>'Erreur de mise à jour !','status'=>'ko']);
+                    die();
+                }
             }
+            
         } catch (\PDOException  $ex) {
             $db->rollback();
             // echo $ex->getMessage();
@@ -229,15 +356,45 @@ class InscriptionController extends Controller
             $ai= $inscr->insert();
             HistoriqueModel::insertData('INSERTION',$detail,'');
             $lastId=intval($ai);
-            if($ae=='ok' && isset($lastId)){
-                $db->commit();
-                echo json_encode(['color'=>'success','message'=>'Bien ajouté "en mode full insertion" !','status'=>'ok']);
+            if (isset($_POST['sd'])) {
+                $nbat=0;
+                $nbT=$_POST['nbTranche'];
+                if(isset($lastId)){
+                    for ($i=1; $i <= $nbT; $i++) { 
+                        $key=$i.'T';
+                        $t=str_replace('/','-',$_POST[$key]);
+                        $date_prevu=date('Y-m-d',strtotime($t));
+                        
+                        $fs=new FSModel();
+                        $pptsFS['num_tranche']=$i;
+                        $pptsFS['date_prevu']=$date_prevu;
+                        $pptsFS['INSCR_num_matr']=$lastId;
+                        $fs->parse($pptsFS);
+                        $cf= $fs->insert(['num_reçu','date_payement','montant']);
+                        $cf=intval($cf);
+                        if(is_int($cf)){ $nbat++; } 
+                    }
+
+                    if($ae=='ok' && isset($lastId) && $nbat==$nbT){
+                        $db->commit();
+                        echo json_encode(['color'=>'success','message'=>'Bien ajouté "en mode full insertion" !','status'=>'ok']);
+                    }else{
+                        $db->rollback();
+                        echo json_encode(['color'=>'danger','message'=>'Erreur d\'ajout !','status'=>'ko']);
+                        die();
+                    }
+                }
             }else{
-                $db->rollback();
-                echo json_encode(['color'=>'danger','message'=>'Erreur d\'ajout !','status'=>'ko']);
-                die();
+
+                if($ae=='ok' && isset($lastId)){
+                    $db->commit();
+                    echo json_encode(['color'=>'success','message'=>'Bien ajouté "en mode sans date de prevu de paiement" !','status'=>'ok']);
+                }else{
+                    $db->rollback();
+                    echo json_encode(['color'=>'danger','message'=>'Erreur d\'ajout !','status'=>'ko']);
+                    die();
+                }
             }
-            
 
 
         } catch (\PDOException  $ex) {

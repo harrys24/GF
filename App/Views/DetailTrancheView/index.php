@@ -1,6 +1,6 @@
 <h4 id="titre" class="mt-3 mb-4 text-center text-primary">DETAIL PAR TRANCHE</h4>
 <div class="container">
-    <form id="detail_form" action="/detail_tranche/checkData" method="post">
+    <form id="detail_form" action="/DetailTranche/checkData" method="post">
         <div id="feedback"></div>
         <input type="hidden" id="mode" name="mode">
         <div class="row">
@@ -30,7 +30,15 @@
             </div>
             </div>
         <div class="row">
-
+            <div class="col-12 col-md-3 col-lg-2 form-group">
+                <h6 class="text-primary">Montant 1er tranche</h6>
+                <div class="input-group">
+                    <input type="text" id="montant_initial" class="form-control" placeholder="1T Montant">
+                    <div class="input-group-append">
+                        <div class="input-group-text">AR</div>
+                    </div>
+                </div>
+            </div>
             <div class="col-12 col-md-6 col-lg-4 form-group">
                 <h6 class="text-primary">Date début paiement | tous les x mois</h6>
                 <div class="input-group">

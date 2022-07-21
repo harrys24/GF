@@ -18,7 +18,7 @@ $(function(){
             '<label class="custom-control-label" for="ck'+lsck[j].idos+'">'+lsck[j].vdos+'</label>'+
           '</div>';
         }
-        $('#pr_niv').html('NIVEAU<em class="text-warning pl-1">*</em>');
+        $('#pr_niv').html('NIVEAU<em class="text-danger pl-1">*</em>');
         $('#gp').html(sgp);
         $('#ckdossier').html(sck);
       },'json');
@@ -89,12 +89,12 @@ $(function(){
   
   function viewTfAutre(sel,closename){
     return '<div class="input-group-prepend">'+
-      '<span class="input-group-text" >Autre<em class="text-warning pl-1">*</em></span>'+
+      '<span class="input-group-text" >Autre<em class="text-danger pl-1">*</em></span>'+
     '</div>'+
     '<input type="text" class="form-control" required>'+
     '<div class="input-group-append">'+
-    '<button type="button" class="btn btn-primary btn_autres" data-sel="'+sel+'"><svg><use xlink:href="/assets/svg/scrud.svg#plus"></svg></button>'+
-      '<button type="button" class="btn btn-danger" id="'+closename+'">X</button>'+
+    '<button type="button" class="btn btn-primary btn_autres" data-sel="'+sel+'"><i class="bi bi-plus-circle"></i></button>'+
+      '<button type="button" class="btn btn-danger" id="'+closename+'"><i class="bi bi-x"></i></button>'+
     '</div>';
   }
   
@@ -124,13 +124,13 @@ $(function(){
   })
   
   $('#cmp').on('click','#btn_addT',function(){
-    var c='<div id="c_sd" class="input-group form-group col-10  col-md-4 col-lg-3">'+
+    var c='<div id="c_sd" class="input-group form-group col-10  col-md-4">'+
       '<div class="input-group-prepend">'+
-      '<span class="input-group-text" >A partir du<em class="text-warning pl-1">*</em></span>'+
+      '<span class="input-group-text" >A partir du<em class="text-danger pl-1">*</em></span>'+
       '</div>'+
-      '<input name="sd" id="sd" size="16" type="text" class="form-control form_date text-center font-italic" readonly required>'+
+      '<input name="sd" id="sd" type="date" class="form-control" required>'+
       '<div class="input-group-append">'+
-      '<span id="sd_close" class="btn btn-danger" >X</span>'+
+      '<span id="sd_close" class="btn btn-danger" ><i class="bi bi-x"></i></span>'+
       '</div>'+
     '</div>';
     $('#cbtn_addT').before(c).remove();
@@ -154,12 +154,36 @@ $(function(){
     $('#listPContainer').html('');
     $('#c_sd').before(btn).remove();
   })
-  
+
+  function viewTU(index,id,num_tranche,date_value,montant_value){
+    return '<div class="col-12 col-md-6 col-lg-4 form-group">'+
+    '<b>Tranche '+index+'</b>'+
+    '<input type="hidden" name="detail['+index+'][id]" value="'+id+'"/>'+
+    '<input type="hidden" value="'+num_tranche+'"/>'+
+    '<div class="input-group">'+
+        '<input type="date" value="'+date_value+'" class="col-lg-8 form-control"  disabled>'+
+        '<input type="text" value="'+montant_value+'" class="col-lg-4 form-control" disabled>'+
+        '<div class="input-group-append bg-light"><div class="input-group-text">AR</div></div>'+
+    '</div></div>'
+  }
+
   $('#tranchefs').on('change',function(){
-    var sd=$('#sd').val(),nbt=$("#tranchefs :selected").text();
-    if (sd!=undefined && nbt!=undefined) {
-      get_date_prevu(sd,nbt);
+    var au=$('#au').val(),niv=$('#niv').val(),tranche=$('#tranchefs option:selected').val();
+    if (!au || !niv) {
+      $('body').danger('Vous deviez d\'abord choisir l\'année universitare et le niveau');return;
     }
+    $.post('/inscription/getDetailTranche',{'au':au,'niv':niv,'tranche':tranche},function(res){
+        console.log(res);
+        if (res.length>0) {
+          var html='';
+          res.forEach((item,index) => {
+              html+=viewTU(index+1,item.id,item.num_tranche,item.date_prevu,item.montant_prevu);
+          });
+          $('#ctranche').html(html);
+        }else{
+          $('body').danger('Vous deviez ajouter les tranches de paiement pour cet année universitaire');return;
+        }
+    },'json')
   });
   
   function get_date_prevu(sd,nbt){

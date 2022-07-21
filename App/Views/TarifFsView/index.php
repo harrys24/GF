@@ -1,6 +1,6 @@
 <h4 id="titre" class="mt-3 mb-4 text-center">FS ANNUEL</h4>
 <div class="container">
-    <form id="detail_form" action="/tarif_fs/checkData" method="post">
+    <form id="detail_form" action="/TarifFs/checkData" method="post">
         <div id="feedback"></div>
         <div class="row">
             <div class="col-12 col-md-3 col-lg-2 form-group">

@@ -90,7 +90,9 @@ class UMModel extends Model{
             ['name'=>'Exportation des données','link'=>'/Export'],
             ['name'=>'Upload Files','link'=>'/Upload'],
             ['name'=>'Réinitialisation des données','link'=>'/Data'],
-            ['name'=>'Debug inscription','link'=>'/Debug']
+            ['name'=>'Debug inscription','link'=>'/Debug'],
+            ['name'=>'Tarif FS','link'=>'/TarifFs'],
+            ['name'=>'Détail par Tranche','link'=>'/DetailTranche']
            
         ],
         'RECU' => '/finance/recus',

@@ -118,8 +118,8 @@ $(function(){
 		'</div>'+
 		'<input type="text" class="form-control" required>'+
 		'<div class="input-group-append">'+
-		'<button type="button" class="btn btn-primary btn_autres" data-sel="'+sel+'"><svg><use xlink:href="/assets/svg/scrud.svg#plus"></svg></button>'+
-		  '<button type="button" class="btn btn-danger" id="'+closename+'">X</button>'+
+		'<button type="button" class="btn btn-primary btn_autres" data-sel="'+sel+'"><i class="bi bi-plus-circle"></i></button>'+
+		  '<button type="button" class="btn btn-danger" id="'+closename+'"><i class="bi bi-x"></i></button>'+
 		'</div>';
 	}
 
@@ -149,45 +149,37 @@ $(function(){
 	})
 
 
-	$('#sd').on('change',function(){
-		// $('#tranchefs').prop('disabled',false);
-		$("#tranchefs").prop("selectedIndex", -1);
-		$('#listPContainer').html('');
-	});
 
-	$('#tranchefs').on('change',function(){
-		var DF='DD/MM/YYYY';
-		var db=moment($('#sd').val(),DF),
-		nb=parseInt($("#tranchefs :selected").text()),
-		items='',step=0;
-		$('#nbTranche').val(nb);
-		switch (nb) {
-			case 1:
-				step=10;
-				break;
-			case 3:
-				step=3;
-				break;
-			case 5:
-				step=2;
-				break;
-		
-			default:
-				step=1
-				break;
+	function viewTU(index,id,num_tranche,date_value,montant_value){
+		return '<div class="col-12 col-md-6 col-lg-4 form-group">'+
+		'<b>Tranche '+index+'</b>'+
+		'<input type="hidden" name="detail['+index+'][id]" value="'+id+'"/>'+
+		'<input type="hidden" value="'+num_tranche+'"/>'+
+		'<div class="input-group">'+
+			'<input type="date" value="'+date_value+'" class="col-lg-8 form-control"  disabled>'+
+			'<input type="text" value="'+montant_value+'" class="col-lg-4 form-control" disabled>'+
+			'<div class="input-group-append bg-light"><div class="input-group-text">AR</div></div>'+
+		'</div></div>'
+	  }
+	
+	  $('#tranchefs').on('change',function(){
+		var au=$('#au').val(),niv=$('#niv').val(),tranche=$('#tranchefs option:selected').val();
+		if (!au || !niv) {
+		  $('body').danger('Vous deviez d\'abord choisir l\'année universitare et le niveau');return;
 		}
-		
-		for(var i=1;i<=nb;i++){
-			items+=createDate(i,db.format(DF));
-			db=db.add(step,'M');
-		}
-		$('#listPContainer').html('').append(items);
-		$('.form_date').datetimepicker({
-			timepicker:false,
-			format:'d/m/Y'
-		});
-
-	});
+		$.post('/inscription/getDetailTranche',{'au':au,'niv':niv,'tranche':tranche},function(res){
+			console.log(res);
+			if (res.length>0) {
+			  var html='';
+			  res.forEach((item,index) => {
+				  html+=viewTU(index+1,item.id,item.num_tranche,item.date_prevu,item.montant_prevu);
+			  });
+			  $('#ctranche').html(html);
+			}else{
+			  $('body').danger('Vous deviez ajouter les tranches de paiement pour cet année universitaire');return;
+			}
+		},'json')
+	  });
 
 	
 	function createDate(numT,value=''){

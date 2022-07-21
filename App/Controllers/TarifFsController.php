@@ -1,26 +1,14 @@
 <?php
-use App\Core\Alert;
 use App\Core\Utils;
-use App\Core\Database;
 use App\Models\AuModel;
 use App\Core\Controller;
 use App\Models\NivModel;
 use App\Models\TarifFsModel;
-use App\Models\TrancheFsModel;
-use App\Models\DetailTrancheModel;
 
-class Tarif_FsController extends Controller
+class TarifFsController extends Controller
 {
     public function __construct(){
         parent::__construct();
-    }
-
-    public function _index(){
-        $header['title']='TOUS LES FS';
-        $data['list']=TarifFsModel::getAll();
-        $this->_renderH($header);
-        $this->render('index',$data);
-        $this->renderF();
     }
 
     public function index(){
@@ -49,10 +37,11 @@ class Tarif_FsController extends Controller
     }
     public function checkData(){
         $res= TarifFsModel::insertList($_POST);
-        header('Location: /tarif_fs');
+        header('Location: /TarifFs');
     }
     
     public function update(){
         TarifFsModel::updateFs($_POST);
     }
+
 }

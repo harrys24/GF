@@ -10,6 +10,7 @@ use App\Models\GpModel;
 use App\Models\NatModel;
 use App\Models\RecruteurModel;
 use App\Models\AbModel;
+use App\Models\DetailTrancheModel;
 use App\Models\SbModel;
 use App\Models\MbModel;
 use App\Models\DoModel;
@@ -55,25 +56,23 @@ class EtudiantController extends Controller
     //get
     public function view($num_matr){
         $db=Database::getConnection();
-        $sql="select i.*,e.*,
-        DATE_FORMAT(i.dateInscr,'%d/%m/%Y') as dateInscr,DATE_FORMAT(e.dateRec,'%d/%m/%Y') as dateRec,
-        DATE_FORMAT(e.datenaiss,'%d/%m/%Y') as datenaiss 
-        from inscription i
-        inner join etudiant e on i.etudiant_nie=e.nie
-        where i.num_matr=?;";
+        $sql="SELECT i.*,e.* FROM inscription i
+        INNER JOIN etudiant e ON i.etudiant_nie=e.nie
+        WHERE i.num_matr=?;";
         $stmt=$db->prepare($sql);
         $stmt->bindParam(1,$num_matr);
         $stmt->execute();
         $data=DataModel::getData();
         $data['etudiant']=$stmt->fetch();
-        $fk_niv=intval($data['etudiant']['NIV_id']);
         $fk_au=intval($data['etudiant']['AU_id']);
+        $fk_niv=intval($data['etudiant']['NIV_id']);
+        $fk_tranche=intval($data['etudiant']['TrancheFS_id']);
         $nstmt=$db->prepare('select nom_niv from niv where idNIV=?;');
         $nstmt->execute([$fk_niv]);
         $response=$nstmt->fetch();
         $data['dossier']=InscriptionModel::getDossier($fk_niv);
         $data['gp']=GpModel::getListBy($fk_au,$fk_niv);
-        $data['fs']=FsModel::getListBy($num_matr);
+        $data['fs']=DetailTrancheModel::getDetail(['au'=>$fk_au,'niv'=>$fk_niv,'tranche'=>$fk_tranche]);
         $header['title']='Détail '.$data['etudiant']['nie'];
         $header['current_menu']='LISTE DES ÉTUDIANTS';
         $header['css']=['jquery-datetime','toggle-btn','/src/form'];

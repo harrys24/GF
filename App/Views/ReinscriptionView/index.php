@@ -17,7 +17,7 @@
   <div class="row">
     <div class="input-group form-group col-10 col-md-6 col-lg-3">
       <div class="input-group-prepend">
-        <span class="input-group-text" >AU<em class="text-warning pl-1">*</em></span>
+        <span class="input-group-text" >AU<em class="text-danger pl-1">*</em></span>
       </div>
       <select name="AU_id" id="au" class="form-control" required>
       <?php isset($etudiant)?showUptOPT($etudiant['AU_id'],$au,'idAU','nom_au'):showOPT($au,'idAU','nom_au') ?>
@@ -38,7 +38,7 @@
     <!-- NIE -->
       <div class="input-group form-group col-10 col-md-6 col-lg-4">
       <div class="input-group-prepend">
-        <span class="input-group-text" >NIE<em class="text-warning pl-1">*</em></span>
+        <span class="input-group-text" >NIE<em class="text-danger pl-1">*</em></span>
       </div>
       <?php 
       if(isset($etudiant)){
@@ -58,7 +58,7 @@
     <!-- Niveau et GP -->
     <div class="input-group form-group col-10 col-md-6 offset-lg-1 col-lg-4">
       <div class="input-group-prepend">
-        <span id="pr_niv" class="input-group-text" >NIVEAU<em class="text-warning pl-1">*</em></span>
+        <span id="pr_niv" class="input-group-text" >NIVEAU<em class="text-danger pl-1">*</em></span>
       </div>
       <select name="NIV_id" id="niv" class="form-control" required>
       <?php isset($etudiant)?showUptOPT($etudiant['NIV_id'],$niv,'idNIV','nom_niv'):showOPT($niv,'idNIV','nom_niv') ?>
@@ -75,14 +75,14 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-6 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Nom<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Nom<em class="text-danger pl-1">*</em></span>
         </div>
       <input type="text" name="nom" value="<?php echo isset($etudiant)?$etudiant['nom']:''; ?>" class="form-control" placeholder="votre nom(s)" required>
       </div>
 
       <div class="input-group form-group col-12 col-md-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Prénom(s)<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Prénom(s)<em class="text-danger pl-1">*</em></span>
         </div>
       <input type="text" name="prenom" value="<?php echo isset($etudiant)?$etudiant['prenom']:''; ?>" class="form-control" placeholder="votre prénom(s)" required>
       </div>
@@ -95,7 +95,7 @@
       
       <div class="input-group form-group col-10 col-md-5 offset-lg-1 col-lg-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Nationalité<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Nationalité<em class="text-danger pl-1">*</em></span>
         </div>
         <select name="NAT_id" id="nat" class="form-control" required>
         <?php isset($etudiant)?showUptAOPT($etudiant['NAT_id'],$nat,'idNAT','nationalite'):showAOPT($nat,'idNAT','nationalite') ?>
@@ -105,19 +105,16 @@
     </div>
     <!--DATE et LIEU DE NAISSANCE -->
     <div class="row">
-      <div class="input-group form-group col-8 col-md-4 col-lg-4">
+      <div class="input-group form-group col-8 col-md-4">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Date de naissance<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Date de naissance<em class="text-danger pl-1">*</em></span>
         </div>
-        <input id="dateNaiss" name="dateNaiss" value="<?php if(isset($etudiant)){ echo $etudiant['datenaiss'];} ?>" size="16" type="text" class="form-control form_date text-center" readonly required>
-        <div class="input-group-append">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#calendar"></svg></span>
-        </div>
+        <input id="dateNaiss" name="dateNaiss" value="<?php if(isset($etudiant)){ echo $etudiant['datenaiss'];} ?>" type="date" class="form-control" required>
       </div>
 
       <div class="input-group form-group col-12 col-md-8  offset-lg-1 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Lieu de naissance<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Lieu de naissance<em class="text-danger pl-1">*</em></span>
         </div>
       <input type="text" name="lieuNaiss" class="form-control" placeholder="à" value="<?php echo isset($etudiant)?$etudiant['lieunaiss']:''; ?>" required>
       </div>
@@ -126,20 +123,20 @@
     <div class="row">
       <div class="input-group form-group col-10 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-        <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#home"></svg><em class="text-warning pl-1">*</em></span>
+        <span class="input-group-text" ><i class="bi bi-house"></i><em class="text-danger pl-1">*</em></span>
         </div>
       <input class="form-control" type="text" name="adresse" value="<?php echo isset($etudiant)?$etudiant['adresse']:''; ?>" required>
       </div>
       <div id="cce" class="input-group form-group col-12 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text"><svg><use xlink:href="/assets/svg/inscr.svg#phone"></svg><em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text"><i class="bi bi-phone"></i></svg><em class="text-danger pl-1">*</em></span>
         </div>
         <?php isset($etudiant)?showUpdContact($etudiant['contacte'],'',true):showContact('',true); ?>
       </div>
 
       <div class="input-group form-group col-12 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#mail"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-send"></i></span>
         </div>
       <input type="email" name="email" value="<?php echo isset($etudiant)?$etudiant['email']:''; ?>" class="form-control" placeholder="__@mail.com" >
       </div>
@@ -149,7 +146,7 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-6 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" >BACC<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >BACC<em class="text-danger pl-1">*</em></span>
         </div>
         <select name="AB_id" id="ab" class="form-control" required>
         <?php isset($etudiant)?showUptOPT($etudiant['AB_id'],$ab,'idAB','annee'):showOPT($ab,'idAB','annee') ?>
@@ -165,7 +162,7 @@
       <!-- ETABLISSEMENT PRECEDENT -->
       <div class="input-group form-group col-12 col-md-6 col-lg-6">
         <div class="input-group-prepend">
-          <div class="input-group-text" >Etablissement<em class="text-warning pl-1">*</em></div>
+          <div class="input-group-text" >Etablissement<em class="text-danger pl-1">*</em></div>
         </div>
       <input type="text" name="EP" class="form-control" required>
       </div>
@@ -174,7 +171,7 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-5 col-lg-4">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Dernier diplôme<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Dernier diplôme<em class="text-danger pl-1">*</em></span>
         </div>
         <select name="DO_id" id="do" class="form-control" required>
         <?php isset($etudiant)?showUptAOPT($etudiant['DO_id'],$do,'idDO','diplome'):showAOPT($do,'idDO','diplome') ?>
@@ -221,7 +218,7 @@
 
       <div class="input-group form-group col-12 col-md-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#home"></span>
+          <span class="input-group-text" ><i class="bi bi-house"></i></span>
         </div>
       <input type="text" name="adresse_p" value="<?php echo isset($etudiant)?$etudiant['adresse_p']:''; ?>" class="form-control" placeholder="adresse du père" >
       </div>
@@ -230,14 +227,14 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#phone"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-phone"></i></svg></span>
         </div>
         <?php isset($etudiant)?showUpdContact($etudiant['contacte_p'],'_p'):showContact('_p'); ?>
       </div>
 
       <div class="input-group form-group col-12 col-md-9 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#mail"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-send"></i></span>
         </div>
       <input type="email" name="email_p" value="<?php echo isset($etudiant)?$etudiant['email_p']:''; ?>" class="form-control" placeholder="__@mail.com" >
       </div>
@@ -275,7 +272,7 @@
 
       <div class="input-group form-group col-12 col-md-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#home"></span>
+          <span class="input-group-text" ><i class="bi bi-house"></i></span>
         </div>
       <input type="text" name="adresse_m" value="<?php echo isset($etudiant)?$etudiant['adresse_m']:''; ?>" class="form-control" placeholder="adresse de la mère" >
       </div>
@@ -284,14 +281,14 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#phone"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-phone"></i></svg></span>
         </div>
         <?php isset($etudiant)?showUpdContact($etudiant['contacte_m'],'_m'):showContact('_m'); ?>
       </div>
 
       <div class="input-group form-group col-12 col-md-9 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#mail"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-send"></i></span>
         </div>
       <input type="email" name="email_m" value="<?php echo isset($etudiant)?$etudiant['email_m']:''; ?>" class="form-control" placeholder="__@mail.com" >
       </div>
@@ -329,7 +326,7 @@
 
       <div class="input-group form-group col-12 col-md-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#home"></span>
+          <span class="input-group-text" ><i class="bi bi-house"></i></span>
         </div>
       <input type="text" name="adresse_t" value="<?php echo isset($etudiant)?$etudiant['adresse_t']:''; ?>" class="form-control" placeholder="adresse du tuteur" >
       </div>
@@ -338,14 +335,14 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-9 col-lg-5">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#phone"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-phone"></i></svg></span>
         </div>
         <?php isset($etudiant)?showUpdContact($etudiant['contacte_t'],'_t'):showContact('_t'); ?>
       </div>
 
       <div class="input-group form-group col-12 col-md-9 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" ><svg><use xlink:href="/assets/svg/inscr.svg#mail"></svg></span>
+          <span class="input-group-text" ><i class="bi bi-send"></i></span>
         </div>
       <input type="email" name="email_t" value="<?php echo isset($etudiant)?$etudiant['email_t']:''; ?>" class="form-control" placeholder="__@mail.com" >
       </div>
@@ -373,7 +370,7 @@
     <div class="form-row">
       <div class="input-group form-group col-12 col-md-6 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text bg-white text-<?php echo $_SESSION['type']; ?>" >ENTRETIEN<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text bg-white text-<?php echo $_SESSION['type']; ?>" >ENTRETIEN<em class="text-danger pl-1">*</em></span>
         </div>
         <input name="dateRec" value="<?php if(isset($etudiant)){ echo $etudiant['dateRec'];} ?>" size="16" type="text" class="form-control form_date text-center" readonly required>
         <div class="input-group-prepend">
@@ -387,16 +384,9 @@
 
     <!--MODE DE PAIEMENT -->
     <div class="row">
-      <!--DEBUT DE PAIEMENT -->
-    <div class="input-group form-group col-10  col-md-4 col-lg-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" >A partir du<em class="text-warning pl-1">*</em></span>
-        </div>
-      <input name="sd" value="<?php echo isset($fs)?$fs[0]['date_prevu']:date('d/m/Y'); ?>" id="sd" size="16" type="text" class="form-control form_date text-center font-italic" readonly required>
-      </div>
       <div class="input-group form-group col-8 col-md-6 col-lg-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Tranche<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >Tranche<em class="text-danger pl-1">*</em></span>
         </div>
         <input type="hidden" id="nbTranche" name="nbTranche">
         <select name="TrancheFS_id" id="tranchefs" class="form-control" required> 
@@ -409,15 +399,19 @@
     
     </div>
 
-    <!--LISTES DPAIEMENT -->
-    <div class="form-row" id="listPContainer">
-    <?php if(isset($fs)){ showDate_prevu($fs); } ?>
+    <!-- DETAIL DE PAIEMENT-->
+    <div class="row">
+      <span class="h5 text-<?= $_SESSION['type']; ?> my-3 ml-2">DETAIL DE PAIEMENT</span>
     </div>
+    <div id="ctranche" class="row">
+      <?php if(isset($fs)){ showDetail_Tranche($fs); } ?>
+    </div>
+
     <!-- DI -->
     <div class="row">
       <div class="input-group form-group col-12 col-md-6 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" >DI<em class="text-warning pl-1">*</em></span>
+          <span class="input-group-text" >DI<em class="text-danger pl-1">*</em></span>
         </div>
       <input type="text" name="DI" class="form-control font-italic" placeholder="droit d'inscription" required>
       <input type="text" name="Reste_DI" class="form-control font-italic" placeholder="reste" required>
@@ -441,7 +435,7 @@
     <!--DEBUT DE PAIEMENT -->
     <div class="input-group form-group col-10  col-md-4 col-lg-3">
         <div class="input-group-prepend">
-        <span class="input-group-text text-info font-italic bg-light" >s'inscrire le<em class="text-warning pl-1">*</em></span>
+        <span class="input-group-text text-info font-italic bg-light" >s'inscrire le<em class="text-danger pl-1">*</em></span>
         </div>
       <input name="dateInscr" value="<?php echo date('d/m/Y'); ?>" id="dateInscr" size="16" type="text" class="form-control form_date text-center font-italic" readonly required>
       </div>

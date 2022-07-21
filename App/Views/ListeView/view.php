@@ -351,22 +351,16 @@
           <span class="input-group-text" >FOIS</span>
         </div>
       </div>
-      <!--DEBUT DE PAYEMENT -->
-      <?php 
-      if (isset($fs) && count($fs)>0) {  ?>
-      <div class="input-group form-group col-10  col-md-4 col-lg-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" >A partir du</span>
-        </div>
-        <input name="sd" value="<?php echo $fs[0]['date_prevu']; ?>" id="sd" size="16" type="text" class="form-control form_date text-center font-italic" readonly required>
-      </div>
-      <?php  }  ?>
+     
         
     </div>
 
-    <!--LISTES DPAYEMENT -->
-    <div class="form-row" id="listPContainer">
-    <?php if(isset($fs)){ showDate_prevu($fs); } ?>
+     <!-- DETAIL DE PAIEMENT-->
+     <div class="row">
+      <span class="h5 text-<?= $_SESSION['type']; ?> my-3 ml-2">DETAIL DE PAIEMENT</span>
+    </div>
+    <div id="ctranche" class="row">
+      <?php if(isset($fs)){ showDetail_Tranche($fs); } ?>
     </div>
     <!-- DI -->
     <div class="row">

@@ -7,21 +7,22 @@ class FsModel extends Model{
         $isAI=true;
         
     var $idFS,$num_tranche,
-        $num_reçu,
-        $date_prevu,$date_payement,
-        $montant,
-        $INSCR_num_matr;
+        $date_prevu,
+        $INSCR_num_matr,
+        $DETAIL_TRANCHE_id;
     public function __construct(){
         parent::__construct();
     }
 
 
     public static function getListBy($num_matr){
-        $sql="SELECT idFS,num_tranche,DATE_FORMAT(date_prevu,'%d/%m/%Y') as date_prevu FROM fs WHERE INSCR_num_matr=?  ORDER BY num_tranche ASC";
+        $sql='SELECT d.id,d.num_tranche,d.date_prevu,d.montant_prevu FROM fs f 
+        INNER JOIN detail_par_tranche d ON f.DETAIL_TRANCHE_id=d.id
+        WHERE f.inscr_num_matr=:nm ORDER BY f.idFS';
         try {
             $db=Database::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam(1,$num_matr);
+            $stmt->bindParam(':nm',$num_matr);
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (\PDOException $ex) {
@@ -103,6 +104,35 @@ class FsModel extends Model{
             return $s;
         }else return $str.'00001';
 
+    }
+
+    public static function insertList($num_matr,$list){
+        $db=Database::getConnection();
+        $sql="INSERT INTO fs (inscr_num_matr,detail_tranche_id) VALUES (:nm,:detail_tranche_id);";
+        $inserted=0;
+        foreach ($list as $item) {
+            $stmt=$db->prepare($sql);
+            $stmt->bindParam(':detail_tranche_id',$item['id']);
+            $stmt->bindParam(':nm',$num_matr);
+            if ($stmt->execute()) {
+                $inserted++;
+            }
+        }
+        return $inserted;
+    }
+    public static function updateList($au,$num_matr,$list){
+        $db=Database::getConnection();
+        $sql="INSERT INTO fs (inscr_num_matr,detail_tranche_id) VALUES (:nm,:detail_tranche_id);";
+        $inserted=0;
+        foreach ($list as $item) {
+            $stmt=$db->prepare($sql);
+            $stmt->bindParam(':detail_tranche_id',$item['id']);
+            $stmt->bindParam(':nm',$num_matr);
+            if ($stmt->execute()) {
+                $inserted++;
+            }
+        }
+        return $inserted;
     }
 
     

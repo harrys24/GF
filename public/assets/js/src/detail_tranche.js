@@ -44,16 +44,15 @@ $(function(){
         // checkView();
         var tranche=$('#tranche').val(),au=$('#au').val(),niv=$('#niv').val();
         $('#tranche-title').html(loading);
-        $.post('/detail_tranche/checkView',{'au':au,'niv':niv,'tranche':tranche},function(res){
+        $.post('/DetailTranche/checkView',{'au':au,'niv':niv,'tranche':tranche},function(res){
             $('#tranche-title').html('Tranche');
             if (res.mode=='u') {
                 $('#mode').val('u');
-                $('#titre').html('Mise à jour');
-                console.log(res);
+                $('#titre').html('MISE A JOUR');
                 viewU(res.list);
             } else {
                 $('#mode').val('i');
-                $('#titre').html('Insertion')
+                $('#titre').html('INSERTION')
                 viewI();
             }
             
@@ -64,12 +63,26 @@ $(function(){
         if($.trim($("#ctranche").html())==''){
             $('body').info('Vous n\'avez pas de tranche inserée !');
         }
-        var date_debut=$('#date_debut').val(),DF='YYYY-MM-DD',dd=moment(date_debut),
-        step=$('#decalage_mois option:selected').val();
-        $('#ctranche input[type="date"]').each(function(){
-            $(this).val(dd.format(DF));
-            dd.add(step,'M');
-        })
+        
+        var date_debut=$('#date_debut').val(),DF='YYYY-MM-DD',dd=moment(date_debut),nbt=$('#tranche option:selected').data('nbt'),
+        fs_annuel=$('#niv').data('fs'),step=$('#decalage_mois option:selected').val();
+        if (nbt==1) {$('#montant_initial').val(fs_annuel);}
+        var montant_initial=$('#montant_initial').val();
+        if (fs_annuel && montant_initial) {
+            fs=parseFloat(fs_annuel);
+            mi=parseFloat(montant_initial);
+            mr=(fs-mi)/(nbt-1);
+            mr=Math.round(mr * 100)/100;
+            $('#ctranche input[type="text"]').each(function(index){
+               $(this).val((index==0)?mi:mr);
+            })
+        }
+        if (date_debut) {
+            $('#ctranche input[type="date"]').each(function(){
+                $(this).val(dd.format(DF));
+                dd.add(step,'M');
+            })
+        }
     })
 
     $('#btn-submit').on('click',function(e){
@@ -90,7 +103,7 @@ $(function(){
         }
         
         $('#niv-title').html(loading);
-        $.post('/detail_tranche/getFS',{'au':au,'niv':niv},function(res){
+        $.post('/DetailTranche/getFS',{'au':au,'niv':niv},function(res){
             $('#niv').data('fs',res.fs);
             $('#niv-title').html(sniv+' : '+res.fs+' AR');
         },'json')
