@@ -1,9 +1,15 @@
 <?php
 
-use App\Core\Controller;
 use App\Core\Utils;
+use App\Models\AuModel;
 use App\Models\FsModel;
+use App\Models\GpModel;
+use App\Core\Controller;
+use App\Models\NivModel;
 use App\Models\RecusModel;
+use App\Models\TrancheFsModel;
+use App\Models\InscriptionModel;
+use App\Models\TarifFsModel;
 
 class FinanceController extends Controller
 {
@@ -23,11 +29,46 @@ class FinanceController extends Controller
         $this->renderF();
     }
 
+    public function engagement()
+    {
+        $header['title']='Fiche d\'engagement';
+        $header['current_menu']='FINANCE';
+        $header['css']=['toastr'];
+        $header['js']=['toastr','/src/engagement'];
+        $data['au']=AuModel::getList('nom_au','DESC');
+        $data['niv']=NivModel::getList('nom_niv','ASC');
+        $data['tranchefs']=TrancheFsModel::getList('nbT','ASC');
+        $this->renderH($header);
+        $this->render('Finance.engagement',$data);
+        $this->renderF();
+    }
+    public function updateTranche()
+    {
+        Utils::HeaderJS();
+        $data=InscriptionModel::updateTranche();
+        echo json_encode($data);
+    }
+
+    public function getGP(){
+        Utils::HeaderJS();
+        $data=[];
+        $data['gp']=GpModel::getListBy($_POST['au'],$_POST['niv']);
+        $tarif=TarifFsModel::getTarifFs($_POST);
+        $data['tarif']=($tarif)?number_format($tarif, 2, ',', ' '):'';
+        echo json_encode($data);
+    }
+
+    public function getEtudiant(){
+        Utils::HeaderJS();
+        $data=InscriptionModel::getDetailEtudiant($_POST['nie'],$_POST['au'],$_POST['niv'],$_POST['gp']);
+        echo json_encode($data);
+    }
+
     public function recus(){
         $header['title']='Reçus';
         $header['current_menu']='RECU';
-        $header['css']=['/src/recus', '/src/toastr'];
-        $header['js']=['/src/cplugs','/src/recus','/src/jquery-ui.min', '/src/toastr.min'];
+        $header['css']=['toastr','/src/recus'];
+        $header['js']=['toastr','/src/recus','/src/jquery-ui.min'];
         $this->renderH($header);
         $this->render('Finance.recus', [
             "recus" => RecusModel::getCurrentRecus(),

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/png" href="<?php getIcon('favicon.png'); ?>">
     <?php if(App\Core\Conf::online==1){ ?>
@@ -19,7 +19,11 @@
     ?>
     <link href="<?= $font ?>" rel="stylesheet">
     <link rel='stylesheet' href='/assets/css/style.min.css'>
+    <?php if(App\Core\Conf::online==1){ ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <?php }else { ?>
     <link rel='stylesheet' href='/assets/css/bootstrap-icons.css'>
+    <?php } ?>
     <?php if (isset($css)) { CSS($css);} ?>
     <title><?= $title; ?></title>
     

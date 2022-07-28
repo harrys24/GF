@@ -185,10 +185,12 @@ class Utils{
     public static function int_post($value){
         if(is_array($value)){
             foreach ($value as $item) {
-                $_POST[$item]=intval($_POST[$item]);
+                $_tmp=intval($_POST[$item]);
+                $_POST[$item]=empty($_tmp)?0:$_tmp;
             }
         }else{
-            $_POST[$value]=intval($_POST[$value]);
+            $_tmp=intval($_POST[$value]);
+            $_POST[$value]=empty($_tmp)?0:$_tmp;
         }
     }
 

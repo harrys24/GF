@@ -127,7 +127,7 @@
         </div>
       <input class="form-control" type="text" name="adresse" value="<?php echo isset($etudiant)?$etudiant['adresse']:''; ?>" required>
       </div>
-      <div id="cce" class="input-group form-group col-12 col-md-9 col-lg-5">
+      <div id="cce" class="input-group form-group col-12 col-md-9 col-lg-6">
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="bi bi-phone"></i></svg><em class="text-danger pl-1">*</em></span>
         </div>
@@ -372,7 +372,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text bg-white text-<?php echo $_SESSION['type']; ?>" >ENTRETIEN<em class="text-danger pl-1">*</em></span>
         </div>
-        <input name="dateRec" value="<?php if(isset($etudiant)){ echo $etudiant['dateRec'];} ?>" size="16" type="text" class="form-control form_date text-center" readonly required>
+        <input type="date" name="dateRec" value="<?php if(isset($etudiant)){ echo $etudiant['dateRec'];} ?>" class="form-control" required>
         <div class="input-group-prepend">
           <span class="input-group-text bg-white text-<?php echo $_SESSION['type']; ?>" >AVEC</span>
         </div>
@@ -386,14 +386,14 @@
     <div class="row">
       <div class="input-group form-group col-8 col-md-6 col-lg-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" >Tranche<em class="text-danger pl-1">*</em></span>
+          <span class="input-group-text" >Tranche</span>
         </div>
         <input type="hidden" id="nbTranche" name="nbTranche">
-        <select name="TrancheFS_id" id="tranchefs" class="form-control" required> 
+        <select name="TrancheFS_id" id="tranchefs" class="form-control"> 
         <?php isset($etudiant)?showUptOPT($etudiant['TrancheFS_id'],$tranchefs,'idT','nbT'):showOPT($tranchefs,'idT','nbT') ?>
         </select>
         <div class="input-group-append">
-          <span class="input-group-text" >FOIS</span>
+          <span id="btn-tranche-reset" class="input-group-text" ><i class="bi bi-arrow-repeat"></i></span>
         </div>
       </div>
     
@@ -411,10 +411,10 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-6 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" >DI<em class="text-danger pl-1">*</em></span>
+          <span class="input-group-text" >DI</span>
         </div>
-      <input type="text" name="DI" class="form-control font-italic" placeholder="droit d'inscription" required>
-      <input type="text" name="Reste_DI" class="form-control font-italic" placeholder="reste" required>
+      <input type="text" name="DI" class="form-control font-italic" placeholder="droit d'inscription">
+      <input type="text" name="Reste_DI" class="form-control font-italic" placeholder="reste">
       <div class="input-group-append">
         <em class="input-group-text" >AR</em>
       </div>

@@ -268,11 +268,12 @@ class EtudiantModel extends Model{
         header("Content-Disposition: attachement; filename=$txt.csv;");
         $ls_filter=[
             'dn'=>'datenaiss','ln'=>'lieunaiss','ce'=>'contact','cp'=>'contact_p',
-            'npp'=>'pere','npm'=>'mere','npt'=>'tuteur'
+            'npp'=>'pere','npm'=>'mere','npt'=>'tuteur','bc'=>'bacc','adr'=>'adresse'
         ];
         $lsTitle=[
             'dn'=>'Date de naissance','ln'=>'Lieu de naissance',
             'ce'=>'Contacts étudiants','cp'=>'Contacts parents',
+            'bc'=>'BACC','adr'=>'Adresse',
             'npp'=>'PÈRE','npm'=>'MÈRE','npt'=>'TUTEUR'];
         $cp=($_SESSION['type']=='devmaster')?'CONCAT(e.contacte_p,"|",e.contacte_m,"|",e.contacte_t)':'CONCAT(e.contacte_p,",",e.contacte_m)';
         $abd=($is_abd==='false')?0:1;
@@ -284,8 +285,11 @@ class EtudiantModel extends Model{
             'cp'=>$cp.' as contact_p',
             'npp'=>'CONCAT(e.nom_p," ",e.prenom_p) as pere',
             'npm'=>'CONCAT(e.nom_m," ",e.prenom_m) as mere',
-            'npt'=>'CONCAT(e.nom_t," ",e.prenom_t) as tuteur'
+            'npt'=>'CONCAT(e.nom_t," ",e.prenom_t) as tuteur',
+            'bc'=>'CONCAT(ab.annee,", ",sb.serie,", ",mb.mention) as bacc',
+            'adr'=>'e.adresse',
         ];
+        //bc
         $s='';$stitle='';
         $ls_alias=[];
         if (isset($_POST['fm'])) {
@@ -297,9 +301,11 @@ class EtudiantModel extends Model{
             }
         }
         $db=Database::getConnection();
-        $sql="SELECT e.nie,e.nom,e.prenom,IF(e.sexe=1,'H','F') AS sexe".$s.
-        " FROM inscription i 
+        $sql="SELECT e.nie,e.nom,e.prenom,IF(e.sexe=1,'H','F') AS sexe $s FROM inscription i 
         INNER JOIN etudiant e on i.etudiant_nie=e.nie 
+        INNER JOIN ab on e.AB_id=ab.idAB  
+        INNER JOIN sb on e.SB_id=sb.idSB  
+        INNER JOIN mb on e.MB_id=mb.idMB  
         WHERE i.AU_id= ? AND i.NIV_id=? AND i.GP_id=? AND i.abandon=? ORDER BY e.nom,e.prenom ASC";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($au),intval($niv),intval($gp),$abd]);
@@ -319,12 +325,13 @@ class EtudiantModel extends Model{
         header("Content-Disposition: attachement; filename=$txt.csv;");
         $ls_filter=[
             'em'=>'email','dn'=>'datenaiss','ln'=>'lieunaiss','ce'=>'contact','cp'=>'contact_p',
-            'npp'=>'pere','npm'=>'mere','npt'=>'tuteur'
+            'npp'=>'pere','npm'=>'mere','npt'=>'tuteur','bc'=>'bacc','adr'=>'adresse'
         ];
         $lsTitle=[
             'em'=>'Email',
             'dn'=>'Date de naissance','ln'=>'Lieu de naissance',
             'ce'=>'Contacts étudiants','cp'=>'Contacts parents',
+            'bc'=>'BACC','adr'=>'Adresse',
             'npp'=>'PÈRE','npm'=>'MÈRE','npt'=>'TUTEUR'];
         $cp=($_SESSION['type']=='devmaster')?'CONCAT(e.contacte_p,"|",e.contacte_m,"|",e.contacte_t)':'CONCAT(e.contacte_p,",",e.contacte_m)';
         $abd=($is_abd==='false')?0:1;
@@ -337,7 +344,9 @@ class EtudiantModel extends Model{
             'cp'=>$cp.' as contact_p',
             'npp'=>'CONCAT(e.nom_p," ",e.prenom_p) as pere',
             'npm'=>'CONCAT(e.nom_m," ",e.prenom_m) as mere',
-            'npt'=>'CONCAT(e.nom_t," ",e.prenom_t) as tuteur'
+            'npt'=>'CONCAT(e.nom_t," ",e.prenom_t) as tuteur',
+            'bc'=>'CONCAT(ab.annee,", ",sb.serie,", ",mb.mention) as bacc',
+            'adr'=>'e.adresse'
         ];
         $s='';$stitle='';
         $ls_alias=[];

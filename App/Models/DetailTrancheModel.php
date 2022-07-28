@@ -68,6 +68,21 @@ class DetailTrancheModel extends Model{
     
     }
 
+    public static function getDetailFormat($params){
+        $db=Database::getConnection();
+        $sql='SELECT date_prevu,montant_prevu FROM detail_par_tranche  WHERE au_id=:au AND niv_id=:niv AND tranche_id=:tranche ORDER BY num_tranche ASC;';
+        $stmt=$db->prepare($sql);
+        $stmt->execute($params);
+        $data= $stmt->fetchAll();
+        if (count($data)>0) {
+            foreach ($data as $k => $item) {
+                $data[$k]['montant_prevu']=number_format($item['montant_prevu'], 2, ',', ' ');
+            }
+            return $data;
+        }else return [];
+    
+    }
+
     public static function check($params){
         $data=self::getDetail($params);
         if (count($data)>0) {

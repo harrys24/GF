@@ -13,14 +13,14 @@ class TarifFsController extends Controller
 
     public function index(){
         $header['title']='Détail Par Tranche';
-        // $header['current_menu']='ABSENCE ET RETARD';
-        $header['js']=['moment-with-locales','/src/cplugs','/src/tarif_fs'];
-        // $header['css']=['jquery-datetime','toggle-btn'];
+        $header['current_menu']='FINANCE';
+        $header['js']=['toastr','moment-with-locales','/src/tarif_fs'];
+        $header['css']=['toastr'];
         // $d=Utils::datetime_now();
         // $data['dn']=$d->format('d/m/Y');
         $data['au']=AuModel::getList('nom_au','DESC');
         $data['niv']=NivModel::getList('nom_niv','ASC');
-        $this->_renderH($header);
+        $this->renderH($header);
         // $this->template('confirm_modal');
         $this->render('index',$data);
         $this->renderF();

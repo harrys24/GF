@@ -30,6 +30,8 @@
 
     <div  class="col-6 col-md-5 col-lg-4 my-2">
       <select name="fm[]" multiple="multiple" id="fm" class="form-control">
+        <option value="bc">BACC</option>
+        <option value="adr">Adresse</option>
         <option value="dn">Date de naissance</option>
         <option value="ln">Lieu de naissance</option>
         <option value="ce">Contacts étudiants</option>

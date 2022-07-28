@@ -20,7 +20,7 @@ class InscriptionController extends Controller
 
     public function index(){
         $data=DataModel::getData();
-        $header['title']='FICHE D\'INSCRIPTION';
+        $header['title']='Fiche d\'inscription';
         $header['current_menu']='FICHE D\'INSCRIPTION';
         $header['css']=['jquery-datetime','toggle-btn','/src/form'];
         $header['js']=['jquery-datetime','toggle-btn','moment-with-locales','/src/cplugs','/src/inscr','/src/inscr_form'];
@@ -46,7 +46,7 @@ class InscriptionController extends Controller
 
     public function getDetailTranche(){
         Utils::HeaderJS();
-        $res= DetailTrancheModel::getDetail($_POST);
+        $res= DetailTrancheModel::getDetailFormat($_POST);
         echo json_encode($res);
     }
 
@@ -72,11 +72,14 @@ class InscriptionController extends Controller
         //PHOTO
         DataModel::uploadPhoto_Etudiant();
         //TO INT
-        Utils::int_post(['AU_id','NIV_id','GP_id','AB_id','SB_id','MB_id','REC_id','TrancheFS_id','nbTranche','DI','Reste_DI']);
+        Utils::int_post(['AU_id','NIV_id','GP_id','AB_id','SB_id','MB_id','REC_id','DI','Reste_DI']);
+        if (isset($_POST['TrancheFS_id'])) {
+            Utils::int_post('TrancheFS_id');
+        }
         //TO BOOLEAN
         $_POST['sexe']=($_POST['sexe']=='H')?1:0;
         Utils::check_post(['abandon']);
-        DataModel::parseDate(['dateNaiss','dateRec','dateInscr']);
+        // DataModel::parseDate(['dateNaiss','dateRec','dateInscr']);
         //INSCRIPTION
         $_POST['ETUDIANT_nie']=$nie;
         if(empty($_POST['num_matr']) ){
@@ -135,7 +138,6 @@ class InscriptionController extends Controller
         try {
             Utils::int_post('num_matr');
             $num_matr=$_POST['num_matr'];
-            $nbT=$_POST['nbTranche'];
             $db=Database::getConnection();
             if($_POST['_nie']!=$_POST['nie']){
                 $etudiant=EtudiantModel::get($_POST['nie']);
@@ -144,7 +146,7 @@ class InscriptionController extends Controller
                     die();
                 }
             }
-            $etudiant=InscriptionModel::getCheckEtudiant($_POST['num_matr']);
+            $etudiant=InscriptionModel::getCheckEtudiant($num_matr);
             
             $info='';
             // $etudiant['idAU']=intval($etudiant['idAU']);
@@ -162,7 +164,8 @@ class InscriptionController extends Controller
             if ($etudiant['idNIV']!=$_POST['NIV_id'] || $etudiant['idGP']!=$_POST['GP_id']) {
                 $info.='NIV : '.$etudiant['NIV_GP'].' > '.$_POST['NIV_GP'].'\n';
             }
-            if ($etudiant['idT']!=$_POST['TrancheFS_id']) {
+
+            if (isset($_POST['TrancheFS_id']) and $etudiant['idT']!=$_POST['TrancheFS_id']) {
                 $info.='Nb Tranche : '.$etudiant['nbT'].'x > '.$_POST['nbTranche'].'x\n';
             }
             if ($etudiant['nie']!=$_POST['nie']) {
@@ -245,76 +248,6 @@ class InscriptionController extends Controller
             // echo json_encode(['color'=>'danger','message'=>'Une erreur s\'est produite !','status'=>'ko']);
         }
     }
-
-    private function _addE($detail){
-        try {
-            $db=Database::getConnection();
-            $etudiant=new EtudiantModel();
-            $etudiant->parse($_POST);
-            $inscr=new InscriptionModel();
-            $inscr->parse($_POST);
-            // $inscr->pwd=Utils::str_random(6);
-            $chkE=EtudiantModel::isExist($_POST['nie'],$_POST['nom'],$_POST['prenom'],$_POST['dateNaiss']);
-            if($chkE){
-                $msg='Cet enregistrement existe déjà <strong>'.$chkE['nie'].' '.$chkE['nom'].' '.$chkE['prenom'].'</strong>';
-                echo json_encode(['color'=>'danger','message'=>$msg,'status'=>'ko']);
-                die();
-            }
-
-            $db->beginTransaction();
-            $ae= $etudiant->insert();
-            $ai= $inscr->insert();
-            HistoriqueModel::insertData('INSERTION',$detail,'');
-            $lastId=intval($ai);
-            if (isset($_POST['sd'])) {
-                $nbat=0;
-                $nbT=$_POST['nbTranche'];
-                if(isset($lastId)){
-                    for ($i=1; $i <= $nbT; $i++) { 
-                        $key=$i.'T';
-                        $t=str_replace('/','-',$_POST[$key]);
-                        $date_prevu=date('Y-m-d',strtotime($t));
-                        
-                        $fs=new FSModel();
-                        $pptsFS['num_tranche']=$i;
-                        $pptsFS['date_prevu']=$date_prevu;
-                        $pptsFS['INSCR_num_matr']=$lastId;
-                        $fs->parse($pptsFS);
-                        $cf= $fs->insert(['num_reçu','date_payement','montant']);
-                        $cf=intval($cf);
-                        if(is_int($cf)){ $nbat++; } 
-                    }
-
-                    if($ae=='ok' && isset($lastId) && $nbat==$nbT){
-                        $db->commit();
-                        echo json_encode(['color'=>'success','message'=>'Bien ajouté "en mode full insertion" !','status'=>'ok']);
-                    }else{
-                        $db->rollback();
-                        echo json_encode(['color'=>'danger','message'=>'Erreur d\'ajout !','status'=>'ko']);
-                        die();
-                    }
-                }
-            }else{
-
-                if($ae=='ok' && isset($lastId)){
-                    $db->commit();
-                    echo json_encode(['color'=>'success','message'=>'Bien ajouté "en mode sans date de prevu de paiement" !','status'=>'ok']);
-                }else{
-                    $db->rollback();
-                    echo json_encode(['color'=>'danger','message'=>'Erreur d\'ajout !','status'=>'ko']);
-                    die();
-                }
-            }
-
-
-        } catch (\PDOException  $ex) {
-            var_dump($ex->getMessage());
-            // echo json_encode(['color'=>'danger','message'=>'Une erreur s\'est produite !','status'=>'ko']);
-        }
-    }
-
-
-    
 
 }
 

@@ -23,11 +23,12 @@ $(function(){
         '</div>';
     }
     $('#au').on('change',function(){
-        var au=$('#au').val();
+        var au=$('#au').val(),au_text=$('#au option:selected').text();
         $.post('/TarifFs/checkView',{'au':au},function(res){
-            var html='';
-            console.log('u'+res.mode);
+            var html='',mode='';
             if (res.mode=='u') {
+                mode='ÉDITION';
+                $('#titre').html('TARIF FS EN EDITION').removeClass('bg-primary').addClass('bg-danger')
                 res['list'].forEach((v,k) => {
                     html+=viewU(k,v)
                 });
@@ -36,6 +37,8 @@ $(function(){
                 $('#btn-submit').addClass('d-none');
                 
             }else{
+                mode='INSERTION';
+                $('#titre').html('AJOUT NOUVEAU TARIF FS').removeClass('bg-danger').addClass('bg-primary')
                 res['list'].forEach((v,k) => {
                     html+=viewI(k,v)
                 });
@@ -43,6 +46,7 @@ $(function(){
                 $('#cmontant').html(html);
                 $('#btn-submit').removeClass('d-none');
             }
+            toastr.info('Frais de scolarité pour '+au_text+' bien chargé','INFORMATION : MODE '+mode)
         },'json')
     })
     $('#cmontant').on('click','.btn-check',function(){

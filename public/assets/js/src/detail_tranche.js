@@ -43,25 +43,34 @@ $(function(){
     $('#tranche').on('change',function(){
         // checkView();
         var tranche=$('#tranche').val(),au=$('#au').val(),niv=$('#niv').val();
+        if (!au || !niv) {
+            toastr.warning('Les champs Année universitaire et Niveau doivent être remplis !','ATTENTION');
+            return;
+        } 
+        var au_text=$('#au option:selected').text(),niv_text=$('#niv option:selected').text(),tranche_text=$('#tranche option:selected').text()
         $('#tranche-title').html(loading);
         $.post('/DetailTranche/checkView',{'au':au,'niv':niv,'tranche':tranche},function(res){
             $('#tranche-title').html('Tranche');
+            var mode='';
             if (res.mode=='u') {
                 $('#mode').val('u');
-                $('#titre').html('MISE A JOUR');
+                mode='ÉDITION';
+                $('#titre').html('TRANCHE DE PAIEMENT EN EDITION').removeClass('bg-primary').addClass('bg-danger')
                 viewU(res.list);
             } else {
                 $('#mode').val('i');
-                $('#titre').html('INSERTION')
+                mode='INSERTION';
+                $('#titre').html('AJOUT NOUVEAU TRANCHE DE PAIEMENT').removeClass('bg-danger').addClass('bg-primary')
                 viewI();
             }
+            toastr.info('Détail de paiement pour '+au_text+' Niveau: '+niv_text+' en '+tranche_text+' bien chargé','INFORMATION : MODE '+mode)
             
         },'json')
         
     })
     $('#btn-filter').on('click',function(){
         if($.trim($("#ctranche").html())==''){
-            $('body').info('Vous n\'avez pas de tranche inserée !');
+            toastr.error('Vous deviez choisir de tranche !')
         }
         
         var date_debut=$('#date_debut').val(),DF='YYYY-MM-DD',dd=moment(date_debut),nbt=$('#tranche option:selected').data('nbt'),
@@ -88,7 +97,7 @@ $(function(){
     $('#btn-submit').on('click',function(e){
         e.preventDefault();
         if($.trim($("#ctranche").html())==''){
-            $('body').info('Vous n\'avez pas de tranche inserée !');
+            toastr.error('Vous deviez choisir de tranche !')
             return;
         }
         $('#detail_form').submit();
@@ -97,13 +106,18 @@ $(function(){
 
     function getFS(){
         var au=$('#au').val(),niv=$('#niv').val(),sniv=$('#niv option:selected').text();
-        if (au==null || niv==null) {
-            $('body').info('remplir les champs au,niv et tranche svp!');
+        if (!au || !niv) {
+            toastr.warning('Les champs Année universitaire et Niveau doivent être remplis !','ATTENTION');
             return;
-        }
+        } 
         
         $('#niv-title').html(loading);
         $.post('/DetailTranche/getFS',{'au':au,'niv':niv},function(res){
+            if (!res.fs) {
+                $('#niv-title').html(sniv+' : - AR');
+                toastr.error('Vous deviez ajouter FS pour cet année universitaire !','ATTENTION');
+                return;
+            }
             $('#niv').data('fs',res.fs);
             $('#niv-title').html(sniv+' : '+res.fs+' AR');
         },'json')

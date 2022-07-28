@@ -400,22 +400,44 @@
     </div>
 
     <!--MODE DE PAIEMENT -->
-    <div id="cmp" class="row">
-      <div class="input-group form-group col-12 col-md-6 col-lg-4">
-        <div class="input-group-prepend">
-          <span class="input-group-text" >Nombre de tranche<em class="text-danger pl-1">*</em></span>
+    <?php
+    if (isset($etudiant)) { $display=''; ?>
+      <div id="cmp" class="row">
+        <?php if (empty($etudiant['TrancheFS_id'])) { $display='d-none'; ?>
+        <div class="col-12">
+          <span id="btn-new-tranche" class="bg-warning text-light rounded form-control"><i class="bi bi-info-circle mr-2"></i>A éditer au Service Financier</span>
         </div>
-        <input type="hidden" id="nbTranche" name="nbTranche">
-        <select name="TrancheFS_id" id="tranchefs" class="form-control" required> 
-        <?php isset($etudiant)?showUptOPT($etudiant['TrancheFS_id'],$tranchefs,'idT','nbT'):showOPT($tranchefs,'idT','nbT') ?>
-        </select>
-        <div class="input-group-append">
-          <span class="input-group-text" >FOIS</span>
+        <?php }else{ ?>
+        <div class="input-group form-group col-12 col-md-6 col-lg-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" >Tranche</span>
+          </div>
+          <input type="hidden" id="nbTranche" name="nbTranche">
+          <select name="TrancheFS_id" id="tranchefs" class="form-control"> 
+          <?php showUptOPT($etudiant['TrancheFS_id'],$tranchefs,'idT','nbT') ?>
+          </select>
+          <div class="input-group-append">
+            <span class="input-group-text" >FOIS</span>
+          </div>
         </div>
+        <?php } ?>
       </div>
-      
-    
-    </div>
+      <?php } else { ?>
+        <div id="cmp" class="row">
+          <div class="input-group form-group col-12 col-md-6 col-lg-4">
+            <div class="input-group-prepend">
+              <span class="input-group-text" >Tranche</span>
+            </div>
+            <input type="hidden" id="nbTranche" name="nbTranche">
+            <select name="TrancheFS_id" id="tranchefs" class="form-control"> 
+            <?php showOPT($tranchefs,'idT','nbT') ?>
+            </select>
+            <div class="input-group-append">
+              <span id="btn-tranche-reset" class="input-group-text" ><i class="bi bi-arrow-repeat"></i></span>
+            </div>
+          </div>
+        </div>
+    <?php } ?>
 
     <!-- DETAIL DE PAIEMENT-->
     <div class="row">
@@ -428,10 +450,10 @@
     <div class="row">
       <div class="input-group form-group col-12 col-md-9 col-lg-6">
         <div class="input-group-prepend">
-          <span class="input-group-text" >DI<em class="text-danger pl-1">*</em></span>
+          <span class="input-group-text" >DI</span>
         </div>
-      <input type="text" name="DI" value="<?= isset($etudiant)?$etudiant['DI']:''; ?>" class="form-control font-italic" placeholder="droit d'inscription" required>
-      <input type="text" name="Reste_DI" value="<?= isset($etudiant)?$etudiant['Reste_DI']:''; ?>" class="form-control font-italic" placeholder="reste" required>
+      <input type="text" name="DI" value="<?= isset($etudiant)?$etudiant['DI']:''; ?>" class="form-control font-italic" placeholder="droit d'inscription">
+      <input type="text" name="Reste_DI" value="<?= isset($etudiant)?$etudiant['Reste_DI']:''; ?>" class="form-control font-italic" placeholder="reste">
       <div class="input-group-append">
         <em class="input-group-text" >AR</em>
       </div>
@@ -460,7 +482,11 @@
       </div>
 
       <div class="d-flex justify-content-center mb-3">
-        <button type="submit" class="btn btn-<?= $_SESSION['type']; ?> col-4" id="btnValider">VALIDER</button>
+        <?php if (isset($etudiant)) { ?>
+          <button type="submit" id="btnValider" class="btn btn-danger px-4"><i class="bi bi-arrow-repeat mr-2"></i>Mettre à jour</button>
+          <?php } else { ?>
+            <button type="submit" id="btnValider" class="btn btn-success px-4"><i class="bi bi-save mr-2"></i>Sauvegarder</button>
+        <?php } ?>
     </div>
 </form>
 </div>

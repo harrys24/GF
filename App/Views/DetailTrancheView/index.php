@@ -1,5 +1,5 @@
-<h4 id="titre" class="mt-3 mb-4 text-center text-primary">DETAIL PAR TRANCHE</h4>
-<div class="container">
+<div class="container pt-1">
+<h3 id="titre" class="text-center text-light bg-primary py-2 mb-4 rounded shadow-sm">DETAIL DE PAIEMENT PAR TRANCHE</h3>
     <form id="detail_form" action="/DetailTranche/checkData" method="post">
         <div id="feedback"></div>
         <input type="hidden" id="mode" name="mode">

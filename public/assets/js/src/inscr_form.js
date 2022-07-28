@@ -1,6 +1,5 @@
 $(function(){
   html_spinner='<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-  $.datetimepicker.setLocale('fr');
   $('#niv').on('change',function(){
     var au=$('#au option:selected').val(),niv=$(this).find("option:selected").val();
     if(au!=null && niv!=null){
@@ -11,7 +10,6 @@ $(function(){
         for(var i in gp){
           sgp+='<option value="'+gp[i].igp+'">'+gp[i].gp+'</option>';
         }
-        
         for(var j in lsck){
           sck+='<div class="col-6 col-md-4 col-lg-3 custom-control custom-checkbox">'+
             '<input type="checkbox" value="'+lsck[j].idos+'" class="custom-control-input" id="ck'+lsck[j].idos+'">'+
@@ -43,18 +41,11 @@ $(function(){
         return false;
       }
       var v=$(this).val(),
-        ls=['032', '033','034', '039', '022'],ss=[3,6,10],
+        ls=['032', '033','034', '039', '022','038'],ss=[3,6,10],
         _v=v.substring(0,3),nb=v.length;
-      if(nb>12 || (nb==3 && ls.indexOf(_v)==-1)){
-        return false;
-      }
-      
-      if(ss.indexOf(nb)!=-1){
-        v+=' ';
-      }
-      if(nb>13){
-        v=v.substring(0, 13);
-      }
+      if(nb>12 || (nb==3 && ls.indexOf(_v)==-1)){return false;}
+      if(ss.indexOf(nb)!=-1){v+=' ';}
+      if(nb>13){v=v.substring(0, 13);}
       $(this).val(v);
     });
   })
@@ -122,38 +113,12 @@ $(function(){
       },'json')
     }
   })
-  
-  $('#cmp').on('click','#btn_addT',function(){
-    var c='<div id="c_sd" class="input-group form-group col-10  col-md-4">'+
-      '<div class="input-group-prepend">'+
-      '<span class="input-group-text" >A partir du<em class="text-danger pl-1">*</em></span>'+
-      '</div>'+
-      '<input name="sd" id="sd" type="date" class="form-control" required>'+
-      '<div class="input-group-append">'+
-      '<span id="sd_close" class="btn btn-danger" ><i class="bi bi-x"></i></span>'+
-      '</div>'+
-    '</div>';
-    $('#cbtn_addT').before(c).remove();
-    $('.form_date').datetimepicker({
-      timepicker:false,
-      format:'d/m/Y'
-    });
-  });
-  
-  $('#cmp').on('change','#sd',function(){
-    var sd=$('#sd').val(),nbt=$("#tranchefs :selected").text();
-    if (sd!=null && nbt!=null) {
-      get_date_prevu(sd,nbt);
-    }
+
+  $('#btn-tranche-reset').on('click',function(){
+    $('#tranchefs').prop('selectedIndex',-1)
+    $('#ctranche').html('')
   })
   
-  $('#cmp').on('click','#sd_close',function(){
-    var btn='<div id="cbtn_addT" class="form-group ml-3">'+
-    '<span id="btn_addT" class="btn btn-outline-primary">Ajouter Tranche de paiement</span>'+
-      '</div>';
-    $('#listPContainer').html('');
-    $('#c_sd').before(btn).remove();
-  })
 
   function viewTU(index,id,num_tranche,date_value,montant_value){
     return '<div class="col-12 col-md-6 col-lg-4 form-group">'+
@@ -186,58 +151,6 @@ $(function(){
     },'json')
   });
   
-  function get_date_prevu(sd,nbt){
-    var DF='DD/MM/YYYY';
-    var db=moment(sd,DF),
-    nb=parseInt(nbt),
-    items='',step=0;
-    $('#nbTranche').val(nb);
-    switch (nb) {
-      case 1:
-        step=10;
-        break;
-      case 3:
-        step=3;
-        break;
-      case 5:
-        step=2;
-        break;
-    
-      default:
-        step=1
-        break;
-    }
-    
-    for(var i=1;i<=nb;i++){
-      items+=createDate(i,db.format(DF));
-      db=db.add(step,'M');
-    }
-    $('#listPContainer').html('').append(items);
-    $('.form_date').datetimepicker({
-      timepicker:false,
-      format:'d/m/Y'
-    });
-  
-  }
-  //janvier
-  //10 01/02/03/... +1
-  //5  01/03/05/07/09  +2
-  //3  01/04/07 +3
-  
-  
-  function createDate(numT,value=''){
-    return '<div class="input-group form-group col-6  col-md-3 col-lg-2">'+
-      '<div class="input-group-prepend">'+
-        '<span class="input-group-text" >'+numT+'T</span>'+
-      '</div>'+
-      '<input name="'+numT+'T" size="16" type="text" class="form-control form_date text-center  font-italic" value="'+value+'" readonly >'+
-    '</div>';
-  }
-  
-  $('.form_date').datetimepicker({
-    timepicker:false,
-    format:'d/m/Y'
-  });
 
   $('#formEtudiant').on('submit',function(e){
     e.preventDefault();
@@ -255,9 +168,8 @@ $(function(){
     $('#au_txt').val(au_txt);
     $('#niv_gp_txt').val(niv_gp_txt);
     $('#ckdossier input:checked').each(function(){
-        ls.push($(this).attr('id'));
+        ls.push($(this).val());
     })
-    
     $('#nbTranche').val(nbt);
     $('#list_dossier').val(ls.join(','));
     var fd=new FormData(this);
@@ -273,7 +185,7 @@ $(function(){
           if (res.status=='ok') {
             $('#iphoto').remove();
             $('#ckdossier').html('');
-            $('#listPContainer').html('');
+            $('#ctranche').html('');
             $(this).reset_form();
           }
           $('body').set_alert(res);

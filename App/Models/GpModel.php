@@ -13,7 +13,7 @@ class GpModel extends Model{
         parent::__construct();
     }
     public static function getListBy($idAU,$idNiv){
-        $sql='select g.idgp as igp ,g.nom_gp as gp from gp_has_au ga
+        $sql='SELECT g.idgp as igp ,g.nom_gp as gp from gp_has_au ga
         inner join niv n on n.idniv=ga.niv_id 
         inner join gp g on g.idgp =ga.gp_id 
         where au_id=? and niv_id=? order by g.nom_gp asc;';

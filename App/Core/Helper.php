@@ -24,9 +24,15 @@ define('LS_CSS',[
     'select2'=>[
         'online'=>'https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css',
         'offline'=>'/assets/css/select2.min.css'],
+    'select2-bt4'=>[
+        'online'=>'https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css',
+        'offline'=>'/assets/css/select2-bootstrap4.min.css'],
     'aos'=>[
         'online'=>'https://unpkg.com/aos@2.3.1/dist/aos.css',
         'offline'=>'/assets/css/aos.css'],
+    'toastr'=>[
+        'online'=>'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
+        'offline'=>'/assets/css/toastr.min.css']
 ]);
         
 define('LS_JS',[
@@ -62,7 +68,11 @@ define('LS_JS',[
     'chart'=>[
         'online'=>'https://cdn.jsdelivr.net/npm/chart.js@2.8.0',
         'offline'=>'/assets/js/chart.js'],
+    'toastr'=>[
+        'online'=>'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
+        'offline'=>'/assets/js/toastr.min.js']
 ]);
+define('LS_FONT',[]);
 
 function addFlash($color,$msg)
 {

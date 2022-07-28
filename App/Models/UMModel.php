@@ -6,9 +6,14 @@ class UMModel extends Model{
         'ACCUEIL'=>'/Accueil',
         'FICHE D\'INSCRIPTION'=>'/Inscription',
         'LISTE DES ÉTUDIANTS'=>'/Etudiant/Listes',
-        'EMARGEMENTS'=>'/Emargements',
         'STATISTIQUE'=>'/Statistique',
-        'RECU' => '/finance/recus',
+        'FINANCE'=>[
+            'id'=>'menu_mat',
+            ['name'=>'Gestion des réçus','link'=>'/Finance/recus'],
+            ['name'=>'Fiche d\'engagement','link'=>'/Finance/engagement'],
+            ['name'=>'Frais de Scolarité Annuel','link'=>'/TarifFs'],
+            ['name'=>'Gestion de paiement par Tranche','link'=>'/DetailTranche']
+        ],
         // 'ABSENCE ET RETARD'=>[
         //     'id'=>'menu_abs_rt',
         //     ['name'=>'Gestion des ABS/RT','link'=>'/Retard'],
@@ -17,7 +22,6 @@ class UMModel extends Model{
         // ],
         //'MATIÈRES'=>'/Matieres',
         'AUTRES'=>[
-            'id'=>'menu_mat',
             'id'=>'menu_mat',
             ['name'=>'Configuration pour la gestion des notes','link'=>'/Matieres'],
             ['name'=>'Gestion des comptes étudiant','link'=>'/Etudiant/Compte'],
@@ -40,15 +44,6 @@ class UMModel extends Model{
         'ACCUEIL'=>'/Accueil',
         'FICHE D\'INSCRIPTION'=>'/Inscription',
         'LISTE DES ÉTUDIANTS'=>'/Etudiant/Listes',
-        'EMARGEMENTS'=>'/Emargements',
-        // 'RECU' => '/finance/recus',
-        // 'ABSENCE ET RETARD'=>[
-        //     'id'=>'menu_abs_rt',
-        //     ['name'=>'Gestion des ABS/RT','link'=>'/Retard'],
-        //     ['name'=>'Justification des ABS/RT','link'=>'/ABS'],
-        //     ['name'=>'Statistique des ABS/RT','link'=>'/ABS/statistique']
-        // ],
-        //'MATIÈRES'=>'/Matieres',
         'AUTRES'=>[
             'id'=>'menu_mat',
             ['name'=>'Configuration pour la gestion des notes','link'=>'/Matieres'],
@@ -64,14 +59,25 @@ class UMModel extends Model{
     $guest=[
         'ACCUEIL'=>'/Accueil',
         'LISTE DES ÉTUDIANTS'=>'/Etudiant/Listes',
-        'RECU' => '/finance/recus'
+        'EXPORTATION'=>'/Export',
+        'FINANCE'=>[
+            'id'=>'menu_mat',
+            ['name'=>'Gestion des réçus','link'=>'/Finance/recus'],
+            ['name'=>'Fiche d\'engagement','link'=>'/Finance/engagement'],
+        ],
     ],
     $devmaster=[
         'ACCUEIL'=>'/Accueil',
         'FICHE D\'INSCRIPTION'=>'/Inscription',
         'LISTE DES ÉTUDIANTS'=>'/Etudiant/Listes',
-        'EMARGEMENTS'=>'/Emargements',
-        'FINANCE'=>'/Finance',
+        'FINANCE'=>[
+            'id'=>'menu_mat',
+            ['name'=>'Check','link'=>'/Finance'],
+            ['name'=>'Gestion des réçus','link'=>'/Finance/recus'],
+            ['name'=>'Fiche d\'engagement','link'=>'/Finance/engagement'],
+            ['name'=>'Frais de Scolarité Annuel','link'=>'/TarifFs'],
+            ['name'=>'Gestion de paiement par Tranche','link'=>'/DetailTranche']
+        ],
         'STATISTIQUE'=>'/Statistique',
         // 'ABSENCE ET RETARD'=>[
         //     'id'=>'menu_abs_rt',
@@ -91,11 +97,9 @@ class UMModel extends Model{
             ['name'=>'Upload Files','link'=>'/Upload'],
             ['name'=>'Réinitialisation des données','link'=>'/Data'],
             ['name'=>'Debug inscription','link'=>'/Debug'],
-            ['name'=>'Tarif FS','link'=>'/TarifFs'],
-            ['name'=>'Détail par Tranche','link'=>'/DetailTranche']
+           
            
         ],
-        'RECU' => '/finance/recus',
         'SYNTHESE'=>[
             'id'=>'menu_mat',
             ['name'=>'Total','link'=>'/Synthese'],

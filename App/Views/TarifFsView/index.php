@@ -1,5 +1,5 @@
-<h4 id="titre" class="mt-3 mb-4 text-center">FS ANNUEL</h4>
-<div class="container">
+<div class="container pt-1">
+    <h3 id="titre" class="text-center text-light bg-primary py-2 mb-4 rounded shadow-sm">FRAIS DE SCOLARITÉ ANNUEL</h3>
     <form id="detail_form" action="/TarifFs/checkData" method="post">
         <div id="feedback"></div>
         <div class="row">

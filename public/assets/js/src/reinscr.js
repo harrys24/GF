@@ -5,7 +5,6 @@ $(function(){
   $("#tranchefs").prop("selectedIndex", -1);
   $("#do").prop("selectedIndex", -1);
   html_spinner='<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-  $.datetimepicker.setLocale('fr');
 	$('[data-toggle="tooltip"]').tooltip();
 	// $('[data-toggle="popover"]').tooltip();
 	// $('#btnTeste').on('click',function(){
@@ -37,11 +36,10 @@ $(function(){
 				for(var i in gp){
 					sgp+='<option value="'+gp[i].igp+'">'+gp[i].gp+'</option>';
 				}
-				
 				for(var j in lsck){
 					sck+='<div class="col-6 col-md-4 col-lg-3 custom-control custom-checkbox">'+
-						'<input type="checkbox" value="'+lsck[j].idos+'" name="'+j+'" class="custom-control-input" id="'+j+'">'+
-						'<label class="custom-control-label" for="'+j+'">'+lsck[j].vdos+'</label>'+
+					  '<input type="checkbox" value="'+lsck[j].idos+'" class="custom-control-input" id="ck'+lsck[j].idos+'">'+
+					  '<label class="custom-control-label" for="ck'+lsck[j].idos+'">'+lsck[j].vdos+'</label>'+
 					'</div>';
 				}
 				$('#pr_niv').html('NIVEAU<em class="text-warning pl-1">*</em>');
@@ -65,22 +63,13 @@ $(function(){
 	$("input[name^='tel']").each(function(){
 		$(this).keypress(function(e){
 			var keyCode = (e.keyCode ? e.keyCode : e.which);
-			if (keyCode < 48 || keyCode > 57) {
-				return false;
-			}
+			if (keyCode < 48 || keyCode > 57) {return false;}
 			var v=$(this).val(),
-				ls=['032', '033','034', '039', '022'],ss=[3,6,10],
+				ls=['032', '033','034', '039', '022','038'],ss=[3,6,10],
 				_v=v.substring(0,3),nb=v.length;
-			if(nb>12 || (nb==3 && ls.indexOf(_v)==-1)){
-				return false;
-			}
-			
-			if(ss.indexOf(nb)!=-1){
-				v+=' ';
-			}
-			if(nb>13){
-				v=v.substring(0, 13);
-			}
+			if(nb>12 || (nb==3 && ls.indexOf(_v)==-1)){return false;}
+			if(ss.indexOf(nb)!=-1){v+=' ';}
+			if(nb>13){v=v.substring(0, 13);}
 			$(this).val(v);
 		});
 	})
@@ -148,6 +137,11 @@ $(function(){
 		}
 	})
 
+	$('#btn-tranche-reset').on('click',function(){
+		$('#tranchefs').prop('selectedIndex',-1)
+		$('#ctranche').html('')
+	})
+
 
 
 	function viewTU(index,id,num_tranche,date_value,montant_value){
@@ -168,7 +162,6 @@ $(function(){
 		  $('body').danger('Vous deviez d\'abord choisir l\'année universitare et le niveau');return;
 		}
 		$.post('/inscription/getDetailTranche',{'au':au,'niv':niv,'tranche':tranche},function(res){
-			console.log(res);
 			if (res.length>0) {
 			  var html='';
 			  res.forEach((item,index) => {
@@ -181,31 +174,31 @@ $(function(){
 		},'json')
 	  });
 
-	
-	function createDate(numT,value=''){
-		return '<div class="input-group form-group col-6  col-md-3 col-lg-2">'+
-			'<div class="input-group-prepend">'+
-				'<span class="input-group-text" >'+numT+'T</span>'+
-			'</div>'+
-			'<input name="'+numT+'T" size="16" type="text" class="form-control form_date text-center  font-italic" value="'+value+'" readonly >'+
-		'</div>';
-	}
-
-	$('.form_date').datetimepicker({
-		timepicker:false,
-		format:'d/m/Y'
-	});
 
 	$('#formEtudiant').on('submit',function(e){
 		e.preventDefault();
-		if ($('#nat').val()==-1 || $('#sb').val()==-1 || $('#do').val()==-1 ) {
-			$('body').set_alert({color:'danger',message:'Veuillez cliquer sur le bouton plus pour ajouter "autre valeur" !'});
-			return;
+		if ($('input[name=sexe]:checked').val()==undefined) {
+		  $('body').set_alert({color:'danger',message:'Veuillez renseigner votre sexe !'});
+		  return;
 		}
-		var frm=$('form')[0];
-		var fd=new FormData(frm);
+		if ($('#nat').val()==-1 || $('#sb').val()==-1 || $('#do').val()==-1 ) {
+		  $('body').set_alert({color:'danger',message:'Veuillez cliquer sur le bouton plus pour ajouter "autre valeur" !'});
+		  return;
+		}
+		var au_txt=$('#au').find(':selected').text(),
+		niv_gp_txt=$('#niv').find(':selected').text()+$('#gp').find(':selected').text(),
+		ls=[],nbt=$("#tranchefs :selected").text();
+		$('#au_txt').val(au_txt);
+		$('#niv_gp_txt').val(niv_gp_txt);
+		$('#ckdossier input:checked').each(function(){
+			ls.push($(this).val());
+		})
+		
+		$('#nbTranche').val(nbt);
+		$('#list_dossier').val(ls.join(','));
+		var fd=new FormData(this);
 		$.ajax({
-			url:'/Reinscription/check',
+			url:'/reinscription/check',
 			type:'post',
 			data:fd,
 			dataType:'json',
@@ -213,19 +206,17 @@ $(function(){
 			contentType:false,
 			processData:false,
 			success:function(res){
-				$(this).set_alert(res);
-				if (res.color!='warning') {
-					$(':input').not(':button :submit').val('').prop('selectedIndex',-1).prop('checked',false);
-					$('#iphoto').remove();
-				}
-				console.log(res);
+			  if (res.status=='ok') {
+				$('#iphoto').remove();
+				$('#ckdossier').html('');
+				$('#ctranche').html('');
+				$(this).reset_form();
+			  }
+			  $('body').set_alert(res);
 			}
 		})
-		// $(this).dropfile();
-		
-		
-		
-	});
+			
+	  });
 
 
   

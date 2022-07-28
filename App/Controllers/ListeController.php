@@ -63,17 +63,17 @@ class ListeController extends Controller
         $sql1="SELECT e.*,i.AU_id,i.NIV_id,t.idT,i.dateInscr,i.DI,i.Reste_DI,i.EP,i.do_en,i.comment,i.list_dossier,
         a.nom_au,n.nom_niv,g.nom_gp,d.diplome,t.nbT,nt.nationalite,r.poste_rec,b.annee,m.mention,s.serie 
         FROM inscription i 
-        INNER JOIN etudiant e ON i.ETUDIANT_nie=e.nie 
-        INNER JOIN au a ON i.AU_id=a.idAU 
-        INNER JOIN niv n ON i.NIV_id=n.idNIV 
-        INNER JOIN gp g ON i.GP_id=g.idGP 
-        INNER JOIN do d ON i.DO_id=d.idDO 
-        INNER JOIN tranchefs t ON i.TrancheFS_id=t.idT 
-        INNER JOIN nat nt ON e.NAT_id=nt.idNAT 
-        INNER JOIN recruteur r ON e.REC_id=r.idREC 
-        INNER JOIN ab b ON e.AB_id=b.idAB 
-        INNER JOIN sb s ON e.SB_id=s.idSB 
-        INNER JOIN mb m ON e.MB_id=m.idMB 
+        LEFT JOIN etudiant e ON i.ETUDIANT_nie=e.nie 
+        LEFT JOIN au a ON i.AU_id=a.idAU 
+        LEFT JOIN niv n ON i.NIV_id=n.idNIV 
+        LEFT JOIN gp g ON i.GP_id=g.idGP 
+        LEFT JOIN do d ON i.DO_id=d.idDO 
+        LEFT JOIN tranchefs t ON i.TrancheFS_id=t.idT 
+        LEFT JOIN nat nt ON e.NAT_id=nt.idNAT 
+        LEFT JOIN recruteur r ON e.REC_id=r.idREC 
+        LEFT JOIN ab b ON e.AB_id=b.idAB 
+        LEFT JOIN sb s ON e.SB_id=s.idSB 
+        LEFT JOIN mb m ON e.MB_id=m.idMB 
         WHERE i.num_matr=?;";
         $stmt=$db->prepare($sql1);
         $stmt->execute([$num_matr]);

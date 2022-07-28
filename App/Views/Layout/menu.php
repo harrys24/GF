@@ -1,5 +1,5 @@
 <header class="mb-5 pb-2">
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-<?php echo $_SESSION['type']; ?>">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-<?= $_SESSION['type']; ?>">
     <div class="dropdown">
     <?php 
       if (!empty($_SESSION['photo'])) {
@@ -9,22 +9,23 @@
       }
     ?>
       <img src="<?php userImg($photo); ?>" class="rounded-circle mr-3" width="40" height="40" alt="image non disponible" data-toggle="dropdown" id="dropdownMenu2"  aria-haspopup="true" aria-expanded="false">
-      <div class="dropdown-menu border-0 shadow-sm mt-3" style="min-width:24rem;">
-        <div class="d-flex px-2">
-          <p class="p-2 mr-auto"><?php echo $_SESSION['nom'].' '.$_SESSION['prenom'];?></br>
-            <span class="text-muted font-italic"><?php echo $_SESSION['email']; ?> </span></br>
-          </p>
+      <div class="dropdown-menu border-0 shadow mt-3" style="min-width:24rem;">
+        <div class="d-flex px-3">
+          <div class="d-flex flex-column justify-content-between">
+            <h5><span class=" text-<?= $_SESSION['type']; ?> font-weight-bold"><?= $_SESSION['nom'] ?></span> <br><span class="text-muted"><?= $_SESSION['prenom'] ?></span></h5>
+            <p class="mt-3 mb-0"><span class="text-muted font-italic"><?= $_SESSION['email']; ?> </span></p>
+          </div>
           <div class="text-center">
-            <img class="rounded-circle border border-<?php echo $_SESSION['type']; ?>" src="<?php userImg($photo); ?>" alt="" width="100" height="100"></br>
-            <span class="font-italic text-<?php echo $_SESSION['type']; ?>"> <?php echo $_SESSION['username']; ?></span>
+            <img class="rounded-circle border border-<?= $_SESSION['type']; ?>" src="<?php userImg($photo); ?>" alt="" width="100" height="100"></br>
+            <span class="font-italic text-<?= $_SESSION['type']; ?>"> <?= $_SESSION['username']; ?></span>
           </div>
         </div>
         <div class="dropdown-divider"></div>
         <div class="d-flex px-2 bg-muted">
           <?php if($_SESSION['type']=='devmaster' || $_SESSION['type']=='admin'){ ?>
-          <a href="/register" class="btn btn-sm btn-outline-<?php echo $_SESSION['type']; ?> mr-auto">s'inscrire</a>
+          <a href="/register" class="btn btn-sm btn-outline-<?= $_SESSION['type']; ?> mr-auto">s'inscrire</a>
           <?php }?>
-          <a href="/user/logout" class="btn btn-sm btn-outline-<?php echo $_SESSION['type']; ?>">se déconnecter</a>
+          <a href="/user/logout" class="btn btn-sm btn-outline-<?= $_SESSION['type']; ?>">se déconnecter</a>
         </div>
         
       </div>

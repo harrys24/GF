@@ -67,16 +67,13 @@ class EtudiantController extends Controller
         $fk_au=intval($data['etudiant']['AU_id']);
         $fk_niv=intval($data['etudiant']['NIV_id']);
         $fk_tranche=intval($data['etudiant']['TrancheFS_id']);
-        $nstmt=$db->prepare('select nom_niv from niv where idNIV=?;');
-        $nstmt->execute([$fk_niv]);
-        $response=$nstmt->fetch();
         $data['dossier']=InscriptionModel::getDossier($fk_niv);
         $data['gp']=GpModel::getListBy($fk_au,$fk_niv);
         $data['fs']=DetailTrancheModel::getDetail(['au'=>$fk_au,'niv'=>$fk_niv,'tranche'=>$fk_tranche]);
         $header['title']='Détail '.$data['etudiant']['nie'];
         $header['current_menu']='LISTE DES ÉTUDIANTS';
-        $header['css']=['jquery-datetime','toggle-btn','/src/form'];
-        $header['js']=['jquery-datetime','toggle-btn','moment-with-locales','/src/cplugs','/src/inscr_form'];
+        $header['css']=['toggle-btn','/src/form'];
+        $header['js']=['toggle-btn','moment-with-locales','/src/cplugs','/src/inscr_form'];
         $this->renderH($header);
         $this->render('Inscription.index',$data);
         $this->renderF();

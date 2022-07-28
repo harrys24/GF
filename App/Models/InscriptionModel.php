@@ -27,10 +27,23 @@ class InscriptionModel extends Model{
 
     }
 
+    public static function getDetailEtudiant($nie,$au_id,$niv_id,$gp_id)
+    {
+        $db=Database::getConnection();
+        $sql="SELECT i.num_matr AS nm,t.idt,t.nbt,e.nie,e.nom,e.prenom,IF(e.sexe=1,'Homme','Femme') as sexe,DATE_FORMAT(e.datenaiss,'%d/%m/%Y') as datenaiss,e.lieunaiss from inscription i 
+        LEFT JOIN etudiant e ON i.etudiant_nie=e.nie 
+        LEFT JOIN tranchefs t ON i.tranchefs_id=t.idt
+        WHERE etudiant_nie=? AND au_id=? AND niv_id=? AND gp_id=?;";
+        $stmt=$db->prepare($sql);
+        $stmt->execute([$nie,intval($au_id),intval($niv_id),intval($gp_id)]);
+        return $stmt->fetch();
+
+    }
+
     public static function getEtudiant($nie,$au_id,$niv_id,$gp_id)
     {
         $db=Database::getConnection();
-        $sql="select i.num_matr as nm,e.nie,e.nom,e.prenom,if(e.sexe=1,'M','F') as sexe from inscription i 
+        $sql="SELECT i.num_matr as nm,e.nie,e.nom,e.prenom,if(e.sexe=1,'M','F') as sexe from inscription i 
         inner join etudiant e on i.etudiant_nie=e.nie 
         where etudiant_nie=? and au_id=? and niv_id=? and gp_id=?;";
         $stmt=$db->prepare($sql);
@@ -42,13 +55,13 @@ class InscriptionModel extends Model{
     public static function getCheckEtudiant($num_matr)
     {
         $db=Database::getConnection();
-        $sql="SELECT a.idAU,a.nom_au as AU,n.idNIV,g.idGP,CONCAT(n.nom_niv,g.nom_gp) as NIV_GP,t.*,e.nie,i.abandon,e.nom,e.prenom,if(e.sexe=1,'M','F') as sexe,datenaiss from inscription i 
-        inner join etudiant e on i.etudiant_nie=e.nie 
-        inner join au a on i.AU_id=a.idAU 
-        inner join niv n on i.NIV_id=n.idNIV 
-        inner join gp g on i.GP_id=g.idGP 
-        inner join tranchefs t on i.TrancheFS_id=t.idT 
-        where num_matr=? ;";
+        $sql="SELECT a.idAU,a.nom_au AS AU,n.idNIV,g.idGP,CONCAT(n.nom_niv,g.nom_gp) AS NIV_GP,t.*,e.nie,i.abandon,e.nom,e.prenom,IF(e.sexe=1,'M','F') AS sexe,datenaiss FROM inscription i 
+        LEFT JOIN etudiant e ON i.etudiant_nie=e.nie 
+        LEFT JOIN au a ON  i.AU_id=a.idAU 
+        LEFT JOIN niv n ON i.NIV_id=n.idNIV 
+        LEFT JOIN gp g ON i.GP_id=g.idGP 
+        LEFT JOIN tranchefs t ON i.TrancheFS_id=t.idT 
+        WHERE num_matr=? ;";
         $stmt=$db->prepare($sql);
         $stmt->execute([intval($num_matr)]);
         return $stmt->fetch();
@@ -56,6 +69,15 @@ class InscriptionModel extends Model{
     }
     
     
+    public static function updateTranche()
+    {
+        $db=Database::getConnection();
+        $sql="UPDATE inscription SET tranchefs_id=:tranche WHERE ETUDIANT_nie=:nie AND au_id=:au AND niv_id=:niv AND gp_id=:gp;";
+        $stmt=$db->prepare($sql);
+        return $stmt->execute($_POST);
+
+    }
+
     public static function isExist($nie,$au_id,$niv_id,$gp_id)
     {
         $db=Database::getConnection();

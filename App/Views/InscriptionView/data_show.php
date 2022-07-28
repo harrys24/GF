@@ -137,16 +137,16 @@ function showDossier(&$dossier,&$etudiant){
                 $vc=in_array($item['idos'],$lsd)?'checked ':'';
                echo '<div class="col-6 col-md-4 col-lg-3">'.
                 '<div class="custom-control custom-checkbox my-1 mr-sm-2">'.
-                    '<input type="checkbox" class="custom-control-input" id="'.$item['idos'].'" '.$vc.'>'.
-                    '<label class="custom-control-label" for="'.$item['idos'].'">'.$item['vdos'].'</label>'.
+                    '<input type="checkbox" class="custom-control-input" value="'.$item['idos'].'" id="ck'.$item['idos'].'" '.$vc.'>'.
+                    '<label class="custom-control-label" for="ck'.$item['idos'].'">'.$item['vdos'].'</label>'.
                 '</div></div>';
             }
         } else {
             foreach ($dossier as  $item) {
                 echo '<div class="col-6 col-md-4 col-lg-3">'.
                 '<div class="custom-control custom-checkbox my-1 mr-sm-2">'.
-                    '<input type="checkbox" class="custom-control-input" id="'.$item['idos'].'">'.
-                    '<label class="custom-control-label" for="'.$item['idos'].'">'.$item['vdos'].'</label>'.
+                    '<input type="checkbox" class="custom-control-input" value="'.$item['idos'].'" id="ck'.$item['idos'].'">'.
+                    '<label class="custom-control-label" for="ck'.$item['idos'].'">'.$item['vdos'].'</label>'.
                 '</div></div>';
             }
         }
